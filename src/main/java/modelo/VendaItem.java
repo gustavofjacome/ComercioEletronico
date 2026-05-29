@@ -1,0 +1,71 @@
+package modelo;
+
+public class VendaItem {
+    private int id;
+    private int qtd;
+    private double preco;
+    private int idVenda;
+    private int idProduto;
+
+    public VendaItem() {
+    }
+
+    public VendaItem(int id, int qtd, double preco, int idVenda, int idProduto) {
+        this.id = id;
+        this.qtd = qtd;
+        this.preco = preco;
+        this.idVenda = idVenda;
+        this.idProduto = idProduto;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getQtd() {
+        return qtd;
+    }
+
+    public void setQtd(int qtd) {
+        this.qtd = qtd;
+    }
+
+    public double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
+
+    public int getIdVenda() {
+        return idVenda;
+    }
+
+    public void setIdVenda(int idVenda) {
+        this.idVenda = idVenda;
+    }
+
+    public int getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(int idProduto) {
+        this.idProduto = idProduto;
+    }
+
+    @Override
+    public String toString() {
+        return "VendaItem{" +
+                "id=" + id +
+                ", qtd=" + qtd +
+                ", preco=" + preco +
+                ", idVenda=" + idVenda +
+                ", idProduto=" + idProduto +
+                '}';
+    }
+}
