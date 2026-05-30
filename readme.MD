@@ -48,7 +48,7 @@ mvn clean compile
 
 ## Diagrama de Arquitetura
 
-![Diagrama UML do Sistema de Comércio Eletrónico](docs/diagramaClasses.png)
+![Diagrama UML do Sistema de Comércio Eletrónico](src/docs/diagramaClasses.png)
 
 
 ## Contribuidores
