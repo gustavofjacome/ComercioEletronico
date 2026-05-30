@@ -5,17 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b09c7843-18c1-4350-97c0-866735297496" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/docs/Diagrama.puml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/docs/readme.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Categoria.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Categoria.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Cliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Cliente.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Produto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Produto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Venda.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Venda.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/modelo/VendaItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/VendaItem.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +18,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="UML Class" />
       </list>
     </option>
   </component>
@@ -46,6 +39,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.UI.executor": "Run",
+    "DefaultPlantUmlFileTemplate": "UML Class",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -58,6 +52,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/docs" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <method v="2">
@@ -80,6 +79,7 @@
       <workItem from="1780018214097" duration="101000" />
       <workItem from="1780018881288" duration="198000" />
       <workItem from="1780142730238" duration="10070000" />
+      <workItem from="1780156113369" duration="1331000" />
     </task>
     <servers />
   </component>

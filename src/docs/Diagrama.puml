@@ -1,0 +1,164 @@
+@startuml
+skinparam roundcorner 12
+skinparam shadowing true
+skinparam nodesep 60
+skinparam ranksep 80
+
+skinparam defaultFontName "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif
+skinparam classFontSize 14
+skinparam classAttributeFontSize 13
+skinparam packageFontSize 16
+
+skinparam class {
+    BackgroundColor #FFFFFF
+    BorderColor #3F51B5
+    BorderThickness 1.5
+    ArrowColor #303F9F
+    ArrowThickness 1.5
+    HeaderBackgroundColor #E8EAF6
+    FontColor #1A237E
+}
+
+skinparam package {
+    BackgroundColor #FCFCFC
+    BorderColor #BDBDBD
+    BorderThickness 1
+    FontColor #424242
+    FontStyle bold
+}
+
+class UI {
+    + main(args: String[])
+    + menuPrincipal()
+    + menuProdutos()
+    + menuClientes()
+    + menuCategorias()
+    + menuVendas()
+}
+
+package "DAOs (Persistência)" {
+    class CategoriaDAO {
+        - objetos : List<Categoria>
+        - mapper : ObjectMapper
+        + inserir(Categoria)
+        + listar() : List<Categoria>
+        + atualizar(Categoria)
+        + excluir(Categoria)
+        + salvar()
+        + abrir()
+    }
+    class ProdutoDAO {
+        - objetos : List<Produto>
+        - mapper : ObjectMapper
+        + inserir(Produto)
+        + listar() : List<Produto>
+        + atualizar(Produto)
+        + excluir(Produto)
+        + salvar()
+        + abrir()
+    }
+    class VendaItemDAO {
+        - objetos : List<VendaItem>
+        - mapper : ObjectMapper
+        + inserir(VendaItem)
+        + listar() : List<VendaItem>
+        + atualizar(VendaItem)
+        + excluir(VendaItem)
+        + salvar()
+        + abrir()
+    }
+    class VendaDAO {
+        - objetos : List<Venda>
+        - mapper : ObjectMapper
+        + inserir(Venda)
+        + listar() : List<Venda>
+        + atualizar(Venda)
+        + excluir(Venda)
+        + salvar()
+        + abrir()
+    }
+    class ClienteDAO {
+        - objetos : List<Cliente>
+        - mapper : ObjectMapper
+        + inserir(Cliente)
+        + listar() : List<Cliente>
+        + atualizar(Cliente)
+        + excluir(Cliente)
+        + salvar()
+        + abrir()
+    }
+}
+
+package "Modelos (Entidades)" {
+    class Categoria {
+        - id : int
+        - descricao : String
+        + get/setId()
+        + get/setDescricao()
+    }
+    class Produto {
+        - id : int
+        - descricao : String
+        - preco : double
+        - estoque : int
+        - idCategoria : int
+        + get/setId()
+        + get/setDescricao()
+        + get/setPreco()
+        + get/setEstoque()
+        + get/setIdCategoria()
+    }
+    class VendaItem {
+        - id : int
+        - idVenda : int
+        - idProduto : int
+        - qtd : int
+        - preco : double
+        + get/setId()
+        + get/setIdVenda()
+        + get/setIdProduto()
+        + get/setQtd()
+        + get/setPreco()
+    }
+    class Venda {
+        - id : int
+        - date : LocalDateTime
+        - total : double
+        - carrinho : boolean
+        - idCliente : int
+        + get/setId()
+        + get/setDate()
+        + get/setTotal()
+        + get/setCarrinho()
+        + get/setIdCliente()
+    }
+    class Cliente {
+        - id : int
+        - nome : String
+        - email : String
+        - fone : String
+        + get/setId()
+        + get/setNome()
+        + get/setEmail()
+        + get/setFone()
+    }
+}
+
+UI --> CategoriaDAO
+UI --> ProdutoDAO
+UI --> VendaItemDAO
+UI --> VendaDAO
+UI --> ClienteDAO
+
+CategoriaDAO --> Categoria : gerencia
+ProdutoDAO --> Produto : gerencia
+VendaItemDAO --> VendaItem : gerencia
+VendaDAO --> Venda : gerencia
+ClienteDAO --> Cliente : gerencia
+
+Categoria "1" -right-> "*" Produto : possui
+Produto "1" -right-> "*" VendaItem : compõe
+Venda "1" -left-> "*" VendaItem : contém
+Cliente "1" -left-> "*" Venda : realiza
+
+@enduml
