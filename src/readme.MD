@@ -53,4 +53,4 @@ mvn clean compile
 
 ## Contribuidores
 
-* [Seu Nome/Gustavo F. Jácome]
+* [Gustavo Jácome]
