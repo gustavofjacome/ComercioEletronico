@@ -6,9 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b09c7843-18c1-4350-97c0-866735297496" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/ProdutoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/ProdutoDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/VendaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/VendaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/VendaItemDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/VendaItemDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +57,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/docs" />
     </key>
@@ -81,7 +84,7 @@
       <workItem from="1780018214097" duration="101000" />
       <workItem from="1780018881288" duration="198000" />
       <workItem from="1780142730238" duration="10070000" />
-      <workItem from="1780156113369" duration="4151000" />
+      <workItem from="1780156113369" duration="5553000" />
     </task>
     <servers />
   </component>
