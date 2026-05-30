@@ -8,6 +8,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe principal responsável por fornecer a Interface de Linha de Comando (CLI) do sistema.
+ * <p>Esta classe atua como a camada de visualização (View) e controle primário da aplicação.
+ * Ela exibe menus interativos, captura a entrada de dados do utilizador através da consola
+ * e delega as operações de negócio (CRUD) para as respetivas classes de acesso a dados (DAOs).</p>
+ * @see dao.ClienteDAO
+ * @see dao.ProdutoDAO
+ * @see dao.CategoriaDAO
+ */
 public class ProdutoDAO {
     private List<Produto> objetos = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
