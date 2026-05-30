@@ -63,13 +63,8 @@ public class Venda {
 
     @Override
     public String toString() {
-        return "Venda{" +
-                "id=" + id +
-                ", date=" + date +
-                ", carrinho=" + carrinho +
-                ", total=" + total +
-                ", idCliente=" + idCliente +
-                '}';
+        return String.format("ID: %-3d | Data: %-15s | Total: R$ %-8.2f | Cliente ID: %d",
+                id, date.toString(), total, idCliente);
     }
 }
 

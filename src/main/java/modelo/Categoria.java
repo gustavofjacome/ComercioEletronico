@@ -30,9 +30,6 @@ public class Categoria {
 
     @Override
     public String toString() {
-        return "Categoria{" +
-                "id=" + id +
-                ", descricao='" + descricao + '\'' +
-                '}';
+        return String.format("ID: %-3d | Descrição: %s", id, descricao);
     }
 }

@@ -50,11 +50,7 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", fone='" + fone + '\'' +
-                '}';
+        return String.format("ID: %-3d | Nome: %-20s | E-mail: %-20s | Telefone: %s",
+                id, nome, email, fone);
     }
 }

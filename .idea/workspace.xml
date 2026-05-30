@@ -5,17 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b09c7843-18c1-4350-97c0-866735297496" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/dao/CategoriaDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dao/ProdutoDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ui/UI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/ClienteDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/ClienteDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/VendaDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/VendaDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dao/VendaItemDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/VendaItemDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Categoria.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Cliente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Produto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/Venda.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/modelo/VendaItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Categoria.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Categoria.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Cliente.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Cliente.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Produto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Produto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/modelo/Venda.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/Venda.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/modelo/VendaItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/modelo/VendaItem.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +79,7 @@
       <workItem from="1780011924220" duration="6279000" />
       <workItem from="1780018214097" duration="101000" />
       <workItem from="1780018881288" duration="198000" />
-      <workItem from="1780142730238" duration="9193000" />
+      <workItem from="1780142730238" duration="10070000" />
     </task>
     <servers />
   </component>
