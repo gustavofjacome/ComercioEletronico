@@ -10,12 +10,11 @@ public class VendaItem {
     public VendaItem() {
     }
 
-    public VendaItem(int id, int qtd, double preco, int idVenda, int idProduto) {
+    public VendaItem(int id, int qtd, double preco) {
         this.id = id;
         this.qtd = qtd;
         this.preco = preco;
-        this.idVenda = idVenda;
-        this.idProduto = idProduto;
+
     }
 
     public int getId() {
