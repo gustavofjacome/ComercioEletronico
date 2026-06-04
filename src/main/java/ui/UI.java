@@ -1,23 +1,19 @@
 package ui;
 
-import dao.CategoriaDAO;
-import dao.ClienteDAO;
-import dao.ProdutoDAO;
 import modelo.Categoria;
 import modelo.Cliente;
 import modelo.Produto;
+import view.View;
 
 import java.util.List;
 import java.util.Scanner;
 
 /**
  * Classe principal responsável por fornecer a Interface de Linha de Comando (CLI) do sistema.
- * <p>Esta classe atua como a camada de visualização (View) e controle primário da aplicação.
+ * <p>Esta classe atua estritamente como a camada de Interface de Usuário (UI).
  * Ela exibe menus interativos, captura a entrada de dados do utilizador através da consola
- * e delega as operações de negócio (CRUD) para as respetivas classes de acesso a dados (DAOs).</p>
- * @see dao.ClienteDAO
- * @see dao.ProdutoDAO
- * @see dao.CategoriaDAO
+ * e delega as operações de controle e lógica de negócio para a classe de controle central.</p>
+ * @see view.View
  */
 public class UI {
 
@@ -29,27 +25,9 @@ public class UI {
     private static Scanner sc = new Scanner(System.in);
 
     /**
-     * Instância do DAO responsável por intermediar as operações de persistência
-     * relacionadas à entidade {@link Produto}.
-     */
-    private static ProdutoDAO produtoDAO = new ProdutoDAO();
-
-    /**
-     * Instância do DAO responsável por intermediar as operações de persistência
-     * relacionadas à entidade {@link Cliente}.
-     */
-    private static ClienteDAO clienteDAO = new ClienteDAO();
-
-    /**
-     * Instância do DAO responsável por intermediar as operações de persistência
-     * relacionadas à entidade {@link Categoria}.
-     */
-    private static CategoriaDAO categoriaDAO = new CategoriaDAO();
-
-    /**
      * Ponto de entrada principal (Entry Point) da aplicação.
      * <p>Inicia um laço de repetição contínuo que exibe o menu principal e encaminha
-     * a execução para os métodos de CRUD específicos com base na escolha do utilizador,
+     * a execução para os métodos de interface específicos com base na escolha do utilizador,
      * sendo encerrado apenas quando a opção 0 é selecionada.</p>
      * @param args Argumentos de linha de comando passados durante a inicialização do programa (não utilizados).
      * @see #menu()
@@ -59,23 +37,22 @@ public class UI {
         do {
             opcao = menu();
             switch (opcao) {
-                // Cliente
+
                 case 1 -> clienteListar();
                 case 2 -> clienteInserir();
                 case 3 -> clienteAtualizar();
                 case 4 -> clienteExcluir();
 
-                // Categoria
                 case 5 -> categoriaListar();
                 case 6 -> categoriaInserir();
                 case 7 -> categoriaAtualizar();
                 case 8 -> categoriaExcluir();
 
-                // Produto
                 case 9 -> produtoListar();
                 case 10 -> produtoInserir();
                 case 11 -> produtoAtualizar();
                 case 12 -> produtoExcluir();
+                case 13 -> produtoReajustar();
 
                 case 0 -> System.out.println("A encerrar o sistema...");
                 default -> System.out.println("Opção inválida!");
@@ -84,25 +61,36 @@ public class UI {
     }
 
     /**
-     * Exibe o painel de opções formatado no terminal e captura a escolha do utilizador.
+     * Exibe o painel de opções formatado no terminal e captura a escolha do utilizador,
+     * tratando a limpeza do buffer do teclado logo em seguida.
      * @return Um número inteiro correspondente à funcionalidade selecionada pelo utilizador.
      * @see Scanner#nextInt()
      */
     public static int menu() {
-        System.out.println("\n===========================================");
-        System.out.println("         SISTEMA DE E-COMMERCE             ");
-        System.out.println("===========================================");
-        System.out.println(" [ CLIENTES ]");
-        System.out.println("  1 - Listar | 2 - Inserir | 3 - Atualizar | 4 - Excluir");
-        System.out.println(" [ CATEGORIAS ]");
-        System.out.println("  5 - Listar | 6 - Inserir | 7 - Atualizar | 8 - Excluir");
-        System.out.println(" [ PRODUTOS ]");
-        System.out.println("  9 - Listar | 10 - Inserir | 11 - Atualizar | 12 - Excluir");
-        System.out.println("-------------------------------------------");
-        System.out.println("  0 - Sair do Sistema");
-        System.out.print("\nEscolha uma opção: ");
+        System.out.println();
+        System.out.println("╔══════════════════════════════════════════════╗");
+        System.out.println("║           SISTEMA DE E-COMMERCE              ║");
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.println("║ CLIENTES                                     ║");
+        System.out.println("║   1. Listar     2. Inserir                   ║");
+        System.out.println("║   3. Atualizar  4. Excluir                   ║");
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.println("║ CATEGORIAS                                   ║");
+        System.out.println("║   5. Listar     6. Inserir                   ║");
+        System.out.println("║   7. Atualizar  8. Excluir                   ║");
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.println("║ PRODUTOS                                     ║");
+        System.out.println("║   9. Listar     10. Inserir                  ║");
+        System.out.println("║   11. Atualizar 12. Excluir                  ║");
+        System.out.println("║   13. Reajustar preços em lote               ║");
+        System.out.println("╠══════════════════════════════════════════════╣");
+        System.out.println("║   0. Sair                                    ║");
+        System.out.println("╚══════════════════════════════════════════════╝");
+        System.out.print("\n➜ Escolha uma opção: ");
 
-        return sc.nextInt();
+        int op = sc.nextInt();
+        sc.nextLine();
+        return op;
     }
 
     // ==========================================
@@ -110,12 +98,12 @@ public class UI {
     // ==========================================
 
     /**
-     * Solicita ao {@link ProdutoDAO} a lista de todos os produtos cadastrados
-     * e exibe-os sequencialmente na consola. Informa caso o catálogo esteja vazio.
-     * @see ProdutoDAO#listar()
+     * Solicita à camada de controle a listagem de todos os produtos cadastrados
+     * e os exibe no console. Informa caso o catálogo esteja vazio.
+     * @see view.View#produtoListar()
      */
     public static void produtoListar () {
-        List<Produto> lista = produtoDAO.listar();
+        List<Produto> lista = View.produtoListar();
 
         if (lista.isEmpty()) {
             System.out.println("Não há produtos cadastrados no sistema.");
@@ -128,13 +116,12 @@ public class UI {
     }
 
     /**
-     * Interage com o utilizador para recolher os dados necessários para criar um novo
-     * registo de produto. Após a validação das entradas, repassa o objeto para gravação no disco.
-     * @see ProdutoDAO#inserir(Produto)
+     * Interage com o utilizador para recolher os dados necessários de um produto
+     * via console e os encaminha de forma limpa para processamento na View.
+     * @see view.View#produtoInserir(String, double, int, int)
      */
     public static void produtoInserir () {
         System.out.println("\n--- INSERIR NOVO PRODUTO ---");
-        sc.nextLine();
 
         System.out.print("Digite a descrição: ");
         String descricao = sc.nextLine();
@@ -149,18 +136,15 @@ public class UI {
         int idCategoria = sc.nextInt();
         sc.nextLine();
 
-        Produto novoProduto = new Produto(0, descricao, preco, estoque);
-        novoProduto.setIdCategoria(idCategoria);
-        produtoDAO.inserir(novoProduto);
-
+        View.produtoInserir(descricao, preco, estoque, idCategoria);
         System.out.println("Produto inserido com sucesso!");
     }
 
     /**
-     * Solicita o ID de um produto existente, recolhe as novas informações através
-     * da consola e envia o objeto modificado para ser atualizado pelo DAO correspondente.
-     * @see ProdutoDAO#listarId(int)
-     * @see ProdutoDAO#atualizar(Produto)
+     * Solicita o identificador de um produto, verifica sua existência local na lista
+     * de visualização e, se encontrado, recolhe as novas propriedades repassando-as para a View.
+     * @see view.View#produtoListar()
+     * @see view.View#produtoAtualizar(int, String, double, int, int)
      */
     public static void produtoAtualizar () {
         System.out.println("\n--- ATUALIZAR PRODUTO ---");
@@ -168,9 +152,15 @@ public class UI {
         int id = sc.nextInt();
         sc.nextLine();
 
-        Produto p = produtoDAO.listarId(id);
+        Produto produtoExistente = null;
+        for (Produto p : View.produtoListar()) {
+            if (p.getId() == id) {
+                produtoExistente = p;
+                break;
+            }
+        }
 
-        if (p == null) {
+        if (produtoExistente == null) {
             System.out.println("Produto não encontrado!");
         } else {
             System.out.print("Digite a nova descrição: ");
@@ -186,32 +176,52 @@ public class UI {
             int idCategoria = sc.nextInt();
             sc.nextLine();
 
-            Produto produtoModificado = new Produto(id, descricao, preco, estoque);
-            produtoModificado.setIdCategoria(idCategoria);
-
-            produtoDAO.atualizar(produtoModificado);
+            View.produtoAtualizar(id, descricao, preco, estoque, idCategoria);
             System.out.println("Produto atualizado com sucesso!");
         }
     }
 
     /**
-     * Solicita o ID de um produto alvo, localiza-o na base de dados e instrui
-     * a camada de persistência a efetuar a sua remoção definitiva.
-     * @see ProdutoDAO#excluir(Produto)
+     * Pede o ID de um produto alvo, valida se ele de fato existe no sistema
+     * e instrui a classe View a realizar a sua exclusão definitiva.
+     * @see view.View#produtoListar()
+     * @see view.View#produtoExcluir(int)
      */
     public static void produtoExcluir () {
         System.out.println("\n--- EXCLUIR PRODUTO ---");
         System.out.print("Digite o ID do produto que deseja excluir: ");
         int id = sc.nextInt();
+        sc.nextLine();
 
-        Produto p = produtoDAO.listarId(id);
+        Produto produtoExistente = null;
+        for (Produto p : View.produtoListar()) {
+            if (p.getId() == id) {
+                produtoExistente = p;
+                break;
+            }
+        }
 
-        if (p == null) {
+        if (produtoExistente == null) {
             System.out.println("Produto não encontrado!");
         } else {
-            produtoDAO.excluir(p);
+            View.produtoExcluir(id);
             System.out.println("Produto excluído com sucesso!");
         }
+    }
+
+    /**
+     * Solicita um valor de taxa percentual na consola e dispara o comando
+     * de reajuste global de preços em lote para todos os produtos ativos.
+     * @see view.View#produtoReajustar(double)
+     */
+    public static void produtoReajustar() {
+        System.out.println("\n--- REAJUSTAR PREÇO DE PRODUTOS ---");
+        System.out.print("Digite o percentual de reajuste (ex: 10 para +10% ou -5 para -5%): ");
+        double percentual = sc.nextDouble();
+        sc.nextLine();
+
+        View.produtoReajustar(percentual);
+        System.out.println("Reajuste aplicado com sucesso a todos os produtos!");
     }
 
     // ==========================================
@@ -219,12 +229,12 @@ public class UI {
     // ==========================================
 
     /**
-     * Solicita ao {@link ClienteDAO} a lista de todos os clientes cadastrados
-     * e exibe as suas informações tabulares na consola.
-     * @see ClienteDAO#listar()
+     * Solicita à camada de controle a listagem de todos os clientes ativos
+     * e renderiza seus dados de forma textual no console.
+     * @see view.View#clienteListar()
      */
     public static void clienteListar () {
-        List<Cliente> lista = clienteDAO.listar();
+        List<Cliente> lista = View.clienteListar();
         if (lista.isEmpty()) {
             System.out.println("Não há clientes cadastrados no sistema.");
         } else {
@@ -236,13 +246,12 @@ public class UI {
     }
 
     /**
-     * Conduz um formulário via consola para a criação de um novo registo de cliente,
-     * enviando o novo modelo preenchido para o sistema de persistência.
-     * @see ClienteDAO#inserir(Cliente)
+     * Captura os dados textuais de identificação de um novo cliente e os envia
+     * encapsulados através de parâmetros de método para a camada View.
+     * @see view.View#clienteInserir(String, String, String)
      */
     public static void clienteInserir () {
         System.out.println("\n--- INSERIR NOVO CLIENTE ---");
-        sc.nextLine();
 
         System.out.print("Digite o nome: ");
         String nome = sc.nextLine();
@@ -253,16 +262,15 @@ public class UI {
         System.out.print("Digite o telefone: ");
         String fone = sc.nextLine();
 
-        Cliente novoCliente = new Cliente(0, nome, email, fone);
-        clienteDAO.inserir(novoCliente);
-
+        View.clienteInserir(nome, email, fone);
         System.out.println("Cliente inserido com sucesso!");
     }
 
     /**
-     * Pede a identificação do cliente e, se encontrado, solicita novos dados cadastrais
-     * para efetuar a sobrescrita das informações.
-     * @see ClienteDAO#atualizar(Cliente)
+     * Lê o ID do cliente, assegura sua existência com apoio das listagens da View
+     * e recolhe as novas entradas textuais para processamento da modificação cadastral.
+     * @see view.View#clienteListar()
+     * @see view.View#atualizarCliente(int, String, String, String)
      */
     public static void clienteAtualizar () {
         System.out.println("\n--- ATUALIZAR CLIENTE ---");
@@ -270,9 +278,15 @@ public class UI {
         int id = sc.nextInt();
         sc.nextLine();
 
-        Cliente c = clienteDAO.listarID(id);
+        Cliente clienteExistente = null;
+        for (Cliente c : View.clienteListar()) {
+            if (c.getId() == id) {
+                clienteExistente = c;
+                break;
+            }
+        }
 
-        if (c == null) {
+        if (clienteExistente == null) {
             System.out.println("Cliente não encontrado!");
         } else {
             System.out.print("Digite o novo nome: ");
@@ -284,28 +298,35 @@ public class UI {
             System.out.print("Digite o novo telefone: ");
             String fone = sc.nextLine();
 
-            Cliente clienteModificado = new Cliente(id, nome, email, fone);
-            clienteDAO.atualizar(clienteModificado);
+            View.atualizarCliente(id, nome, email, fone);
             System.out.println("Cliente atualizado com sucesso!");
         }
     }
 
     /**
-     * Interage com o utilizador para obter o ID do cliente e executa a deleção do
-     * registo correspondente na base de dados JSON.
-     * @see ClienteDAO#excluir(Cliente)
+     * Interage com o terminal para obter o ID de exclusão do cliente e delega
+     * o comando de remoção para a camada controladora correspondente.
+     * @see view.View#clienteListar()
+     * @see view.View#excluirCliente(int)
      */
     public static void clienteExcluir () {
         System.out.println("\n--- EXCLUIR CLIENTE ---");
         System.out.print("Digite o ID do cliente que deseja excluir: ");
         int id = sc.nextInt();
+        sc.nextLine();
 
-        Cliente c = clienteDAO.listarID(id);
+        Cliente clienteExistente = null;
+        for (Cliente c : View.clienteListar()) {
+            if (c.getId() == id) {
+                clienteExistente = c;
+                break;
+            }
+        }
 
-        if (c == null) {
+        if (clienteExistente == null) {
             System.out.println("Cliente não encontrado!");
         } else {
-            clienteDAO.excluir(c);
+            View.excluirCliente(id);
             System.out.println("Cliente excluído com sucesso!");
         }
     }
@@ -315,12 +336,12 @@ public class UI {
     // ==========================================
 
     /**
-     * Imprime no ecrã do utilizador a listagem completa das categorias registadas
-     * através da leitura realizada pelo {@link CategoriaDAO}.
-     * @see CategoriaDAO#listar()
+     * Resgata a coleção completa de categorias cadastradas na View
+     * e faz a sua impressão sequencial formatada na tela do console.
+     * @see view.View#categoriaListar()
      */
     public static void categoriaListar () {
-        List<Categoria> lista = categoriaDAO.listar();
+        List<Categoria> lista = View.categoriaListar();
         if (lista.isEmpty()) {
             System.out.println("Não há categorias cadastradas no sistema.");
         } else {
@@ -332,27 +353,25 @@ public class UI {
     }
 
     /**
-     * Solicita uma breve descrição para compor uma nova classificação e a adiciona
-     * à lista persistida no ficheiro JSON de categorias.
-     * @see CategoriaDAO#inserir(Categoria)
+     * Lê uma string de descrição textual e invoca a operação de inserção
+     * de uma nova classificação de produtos na View.
+     * @see view.View#categoriaInserir(String)
      */
     public static void categoriaInserir () {
         System.out.println("\n--- INSERIR NOVA CATEGORIA ---");
-        sc.nextLine();
 
         System.out.print("Digite a descrição: ");
         String descricao = sc.nextLine();
 
-        Categoria novaCategoria = new Categoria(0, descricao);
-        categoriaDAO.inserir(novaCategoria);
-
+        View.categoriaInserir(descricao);
         System.out.println("Categoria inserida com sucesso!");
     }
 
     /**
-     * Promove a alteração da nomenclatura (descrição) de uma categoria previamente
-     * cadastrada, com base no seu identificador primário.
-     * @see CategoriaDAO#atualizar(Categoria)
+     * Captura o identificador numérico de uma categoria, valida sua presença e
+     * recolhe a nova nomenclatura, acionando o método de atualização da View.
+     * @see view.View#categoriaListar()
+     * @see view.View#categoriaAtualizar(int, String)
      */
     public static void categoriaAtualizar () {
         System.out.println("\n--- ATUALIZAR CATEGORIA ---");
@@ -360,36 +379,49 @@ public class UI {
         int id = sc.nextInt();
         sc.nextLine();
 
-        Categoria c = categoriaDAO.listarId(id);
+        Categoria categoriaExistente = null;
+        for (Categoria c : View.categoriaListar()) {
+            if (c.getId() == id) {
+                categoriaExistente = c;
+                break;
+            }
+        }
 
-        if (c == null) {
+        if (categoriaExistente == null) {
             System.out.println("Categoria não encontrada!");
         } else {
             System.out.print("Digite a nova descrição: ");
             String descricao = sc.nextLine();
 
-            Categoria categoriaModificada = new Categoria(id, descricao);
-            categoriaDAO.atualizar(categoriaModificada);
+            View.categoriaAtualizar(id, descricao);
             System.out.println("Categoria atualizada com sucesso!");
         }
     }
 
     /**
-     * Exclui uma categoria da base de dados e do ficheiro JSON, solicitando o ID
-     * da mesma via entrada do utilizador.
-     * @see CategoriaDAO#excluir(Categoria)
+     * Coleta o ID primário de uma categoria via teclado e, se ela existir,
+     * ordena à camada controladora a realização de sua exclusão lógica/física.
+     * @see view.View#categoriaListar()
+     * @see view.View#categoriaExcluir(int)
      */
     public static void categoriaExcluir () {
         System.out.println("\n--- EXCLUIR CATEGORIA ---");
         System.out.print("Digite o ID da categoria que deseja excluir: ");
         int id = sc.nextInt();
+        sc.nextLine();
 
-        Categoria c = categoriaDAO.listarId(id);
+        Categoria categoriaExistente = null;
+        for (Categoria c : View.categoriaListar()) {
+            if (c.getId() == id) {
+                categoriaExistente = c;
+                break;
+            }
+        }
 
-        if (c == null) {
+        if (categoriaExistente == null) {
             System.out.println("Categoria não encontrada!");
         } else {
-            categoriaDAO.excluir(c);
+            View.categoriaExcluir(id);
             System.out.println("Categoria excluída com sucesso!");
         }
     }
