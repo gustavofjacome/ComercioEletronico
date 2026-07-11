@@ -1,5 +1,6 @@
 exception/CategoriaNaoEncontradaException.class
 exception/VendaNaoEncontradaException.class
+dao/DAO.class
 exception/ProdutoNaoEncontradoException.class
 exception/ClienteNaoEncontradoException.class
 exception/VendaItemNaoEncontradoException.class

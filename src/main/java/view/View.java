@@ -92,7 +92,6 @@ public class View {
     }
 
     public static void produtoReajustar(double percentual){
-        //aplicável a todos os produtos
         for (Produto x : produtoDAO.listar()){
             x.setPreco(x.getPreco() * (1 + (percentual/100)));
             produtoDAO.atualizar(x);
