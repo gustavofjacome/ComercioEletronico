@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import exception.VendaNaoEncontradaException;
 import modelo.Venda;
 import java.io.File;
 import java.util.ArrayList;
@@ -21,39 +22,12 @@ import java.util.List;
  */
 public class VendaDAO implements DAO<Venda>{
 
-    /**
-     * Lista mantida em memória que atua como cache do histórico de vendas
-     * armazenado no ficheiro físico.
-     * @see java.util.List
-     * @see java.util.ArrayList
-     */
     private List<Venda> objetos = new ArrayList<>();
-
-    /**
-     * Instância do conversor responsável pela serialização e desserialização
-     * dos objetos da classe {@link Venda} para o formato JSON e vice-versa.
-     * @see com.fasterxml.jackson.databind.ObjectMapper
-     */
     private ObjectMapper mapper = new ObjectMapper();
-
-    /**
-     * Nome do ficheiro físico no sistema operativo onde os dados das vendas
-     * em formato JSON serão persistidos de forma definitiva.
-     * @see java.io.File
-     */
     private final String ARQUIVO = "vendas.json";
 
-    /**
-     * Construtor padrão da classe {@link VendaDAO}.
-     * Regista o módulo de tempo do Java para permitir a correta manipulação de datas,
-     * inicializa a formatação indentada (pretty-printing) para facilitar a auditoria
-     * do ficheiro gerado e invoca a leitura prévia dos dados armazenados no disco.
-     * @see #abrir()
-     * @see ObjectMapper#registerModule(com.fasterxml.jackson.databind.Module)
-     * @see SerializationFeature#INDENT_OUTPUT
-     */
     public VendaDAO() {
-        mapper.registerModule(new JavaTimeModule()); // Obrigatório para LocalDateTime
+        mapper.registerModule(new JavaTimeModule());
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         abrir();
     }
@@ -97,8 +71,10 @@ public class VendaDAO implements DAO<Venda>{
      */
     @Override
     public void inserir(Venda obj) {
-        int novoId = 1;
-        for (Venda v : objetos) { if (v.getId() >= novoId) novoId = v.getId() + 1; }
+        int novoId = objetos.stream()
+                .mapToInt(Venda::getId)
+                .max()
+                .orElse(0) + 1;
         obj.setId(novoId);
         objetos.add(obj);
         salvar();
@@ -122,8 +98,12 @@ public class VendaDAO implements DAO<Venda>{
      */
     @Override
     public Venda listarId(int id) {
-        for (Venda x : objetos) { if (x.getId() == id) return x; }
-        return null;
+        return objetos.stream()
+                .filter(v -> v.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new VendaNaoEncontradaException(
+                        "Venda com ID " + id + " não encontrada."
+                ));
     }
 
     /**
@@ -136,16 +116,18 @@ public class VendaDAO implements DAO<Venda>{
      */
     @Override
     public void atualizar(Venda obj) {
-        for (Venda y : objetos) {
-            if (y.getId() == obj.getId()) {
-                y.setDate(obj.getDate());
-                y.setCarrinho(obj.isCarrinho());
-                y.setTotal(obj.getTotal());
-                y.setIdCliente(obj.getIdCliente());
-                salvar();
-                break;
-            }
-        }
+        Venda venda = objetos.stream()
+                .filter(v -> v.getId() == obj.getId())
+                .findFirst()
+                .orElseThrow(() -> new VendaNaoEncontradaException(
+                        "Venda com ID " + obj.getId() + " não encontrada."
+                ));
+
+        venda.setDate(obj.getDate());
+        venda.setCarrinho(obj.isCarrinho());
+        venda.setTotal(obj.getTotal());
+        venda.setIdCliente(obj.getIdCliente());
+        salvar();
     }
 
     /**
@@ -158,12 +140,12 @@ public class VendaDAO implements DAO<Venda>{
      */
     @Override
     public void excluir(Venda obj) {
-        for (Venda z : objetos) {
-            if (z.getId() == obj.getId()) {
-                objetos.remove(z);
-                salvar();
-                break;
-            }
+        if (!objetos.removeIf(venda -> venda.getId() == obj.getId())) {
+            throw new VendaNaoEncontradaException(
+                    "Venda com ID " + obj.getId() + " não encontrada."
+            );
         }
+
+        salvar();
     }
 }

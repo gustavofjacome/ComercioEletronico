@@ -3,6 +3,7 @@ package dao;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.ClienteNaoEncontradoException;
 import modelo.Cliente;
 import java.io.File;
 import java.util.ArrayList;
@@ -17,34 +18,10 @@ import java.util.List;
  */
 public class ClienteDAO implements DAO<Cliente>{
 
-    /**
-     * Lista mantida em memória que atua como cache dos dados cadastrais dos clientes
-     * armazenados no arquivo físico.
-     * @see java.util.List
-     * @see java.util.ArrayList
-     */
     private List<Cliente> objetos = new ArrayList<>();
-
-    /**
-     * Instância do conversor responsável pela serialização e desserialização
-     * dos objetos da classe {@link Cliente} para o formato JSON e vice-versa.
-     * @see com.fasterxml.jackson.databind.ObjectMapper
-     */
     private ObjectMapper mapper = new ObjectMapper();
-
-    /**
-     * Nome do arquivo físico no sistema operacional onde os dados dos clientes
-     * em formato JSON serão persistidos de forma definitiva.
-     */
     private final String ARQUIVO = "clientes.json";
 
-    /**
-     * Construtor padrão da classe {@link ClienteDAO}.
-     * Inicializa o conversor JSON ativando a formatação identada (pretty-printing)
-     * para facilitar a leitura humana do arquivo gerado e invoca a leitura prévia
-     * dos dados armazenados no disco.
-     * @see #abrir()
-     */
     public ClienteDAO() {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         abrir();
@@ -88,8 +65,10 @@ public class ClienteDAO implements DAO<Cliente>{
      */
     @Override
     public void inserir(Cliente obj) {
-        int novoId = 1;
-        for (Cliente c : objetos) { if (c.getId() >= novoId) novoId = c.getId() + 1; }
+        int novoId = objetos.stream()
+                .mapToInt(Cliente::getId)
+                .max()
+                .orElse(0) + 1;
         obj.setId(novoId);
         objetos.add(obj);
         salvar();
@@ -126,15 +105,17 @@ public class ClienteDAO implements DAO<Cliente>{
      */
     @Override
     public void atualizar(Cliente obj) {
-        for (Cliente x : objetos) {
-            if (x.getId() == obj.getId()) {
-                x.setNome(obj.getNome());
-                x.setEmail(obj.getEmail());
-                x.setFone(obj.getFone());
-                salvar();
-                break;
-            }
-        }
+        Cliente cliente = objetos.stream()
+                .filter(c -> c.getId() == obj.getId())
+                .findFirst()
+                .orElseThrow(() -> new ClienteNaoEncontradoException(
+                        "Cliente com ID " + obj.getId() + " não encontrado."
+                ));
+
+        cliente.setNome(obj.getNome());
+        cliente.setEmail(obj.getEmail());
+        cliente.setFone(obj.getFone());
+        salvar();
     }
 
     /**
@@ -147,12 +128,12 @@ public class ClienteDAO implements DAO<Cliente>{
      */
     @Override
     public void excluir(Cliente obj) {
-        for (Cliente x : objetos) {
-            if (x.getId() == obj.getId()) {
-                objetos.remove(x);
-                salvar();
-                break;
-            }
+        if (!objetos.removeIf(cliente -> cliente.getId() == obj.getId())) {
+            throw new ClienteNaoEncontradoException(
+                    "Cliente com ID " + obj.getId() + " não encontrado."
+            );
         }
+
+        salvar();
     }
 }
