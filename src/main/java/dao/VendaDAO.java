@@ -8,11 +8,13 @@ import exception.VendaNaoEncontradaException;
 import modelo.Venda;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 public class VendaDAO implements DAO<Venda> {
 
-    private List<Venda> objetos = new ArrayList<>();
+    private Map<Integer, Venda> objetos = new HashMap<>();
+    private int nextId = 1;
     private ObjectMapper mapper = new ObjectMapper();
     private final String ARQUIVO = "vendas.json";
 
@@ -24,7 +26,7 @@ public class VendaDAO implements DAO<Venda> {
 
     @Override
     public void salvar() {
-        try { mapper.writeValue(new File(ARQUIVO), objetos); }
+        try { mapper.writeValue(new File(ARQUIVO), new ArrayList<>(objetos.values())); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
     }
 
@@ -33,59 +35,45 @@ public class VendaDAO implements DAO<Venda> {
         try {
             File arquivo = new File(ARQUIVO);
             if (arquivo.exists()) {
-                objetos = mapper.readValue(arquivo, new TypeReference<List<Venda>>(){});
+                List<Venda> lista = mapper.readValue(arquivo, new TypeReference<List<Venda>>() {});
+                objetos.clear();
+                for (Venda v : lista) {
+                    objetos.put(v.id(), v);
+                }
+                nextId = lista.stream().mapToInt(Venda::id).max().orElse(0) + 1;
             }
-        } catch (Exception e) { objetos = new ArrayList<>(); }
+        } catch (Exception e) { objetos = new HashMap<>(); }
     }
 
     @Override
     public void inserir(Venda obj) {
-        int novoId = objetos.stream()
-                .mapToInt(Venda::getId)
-                .max()
-                .orElse(0) + 1;
-        obj.setId(novoId);
-        objetos.add(obj);
+        int id = nextId++;
+        objetos.put(id, new Venda(id, obj.date(), obj.carrinho(), obj.total(), obj.idCliente()));
         salvar();
     }
 
     @Override
-    public List<Venda> listar() { return objetos; }
+    public List<Venda> listar() { return new ArrayList<>(objetos.values()); }
 
     @Override
     public Venda listarId(int id) {
-        return objetos.stream()
-                .filter(v -> v.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new VendaNaoEncontradaException(
-                        "Venda com ID " + id + " não encontrada."
-                ));
+        Venda v = objetos.get(id);
+        if (v == null) throw new VendaNaoEncontradaException("Venda com ID " + id + " não encontrada.");
+        return v;
     }
 
     @Override
     public void atualizar(Venda obj) {
-        Venda venda = objetos.stream()
-                .filter(v -> v.getId() == obj.getId())
-                .findFirst()
-                .orElseThrow(() -> new VendaNaoEncontradaException(
-                        "Venda com ID " + obj.getId() + " não encontrada."
-                ));
-
-        venda.setDate(obj.getDate());
-        venda.setCarrinho(obj.isCarrinho());
-        venda.setTotal(obj.getTotal());
-        venda.setIdCliente(obj.getIdCliente());
+        if (!objetos.containsKey(obj.id()))
+            throw new VendaNaoEncontradaException("Venda com ID " + obj.id() + " não encontrada.");
+        objetos.put(obj.id(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Venda obj) {
-        if (!objetos.removeIf(venda -> venda.getId() == obj.getId())) {
-            throw new VendaNaoEncontradaException(
-                    "Venda com ID " + obj.getId() + " não encontrada."
-            );
-        }
-
+        if (objetos.remove(obj.id()) == null)
+            throw new VendaNaoEncontradaException("Venda com ID " + obj.id() + " não encontrada.");
         salvar();
     }
 }

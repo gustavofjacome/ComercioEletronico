@@ -7,11 +7,13 @@ import exception.ClienteNaoEncontradoException;
 import modelo.Cliente;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 public class ClienteDAO implements DAO<Cliente> {
 
-    private List<Cliente> objetos = new ArrayList<>();
+    private Map<Integer, Cliente> objetos = new HashMap<>();
+    private int nextId = 1;
     private ObjectMapper mapper = new ObjectMapper();
     private final String ARQUIVO = "clientes.json";
 
@@ -22,7 +24,7 @@ public class ClienteDAO implements DAO<Cliente> {
 
     @Override
     public void salvar() {
-        try { mapper.writeValue(new File(ARQUIVO), objetos); }
+        try { mapper.writeValue(new File(ARQUIVO), new ArrayList<>(objetos.values())); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
     }
 
@@ -31,58 +33,45 @@ public class ClienteDAO implements DAO<Cliente> {
         try {
             File arquivo = new File(ARQUIVO);
             if (arquivo.exists()) {
-                objetos = mapper.readValue(arquivo, new TypeReference<List<Cliente>>(){});
+                List<Cliente> lista = mapper.readValue(arquivo, new TypeReference<List<Cliente>>() {});
+                objetos.clear();
+                for (Cliente c : lista) {
+                    objetos.put(c.id(), c);
+                }
+                nextId = lista.stream().mapToInt(Cliente::id).max().orElse(0) + 1;
             }
-        } catch (Exception e) { objetos = new ArrayList<>(); }
+        } catch (Exception e) { objetos = new HashMap<>(); }
     }
 
     @Override
     public void inserir(Cliente obj) {
-        int novoId = objetos.stream()
-                .mapToInt(Cliente::getId)
-                .max()
-                .orElse(0) + 1;
-        obj.setId(novoId);
-        objetos.add(obj);
+        int id = nextId++;
+        objetos.put(id, new Cliente(id, obj.nome(), obj.email(), obj.fone()));
         salvar();
     }
 
     @Override
-    public List<Cliente> listar() { return objetos; }
+    public List<Cliente> listar() { return new ArrayList<>(objetos.values()); }
 
     @Override
     public Cliente listarId(int id) {
-        return objetos.stream()
-                .filter(c -> c.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new ClienteNaoEncontradoException(
-                        "Cliente com ID " + id + " não encontrado."
-                ));
+        Cliente c = objetos.get(id);
+        if (c == null) throw new ClienteNaoEncontradoException("Cliente com ID " + id + " não encontrado.");
+        return c;
     }
 
     @Override
     public void atualizar(Cliente obj) {
-        Cliente cliente = objetos.stream()
-                .filter(c -> c.getId() == obj.getId())
-                .findFirst()
-                .orElseThrow(() -> new ClienteNaoEncontradoException(
-                        "Cliente com ID " + obj.getId() + " não encontrado."
-                ));
-
-        cliente.setNome(obj.getNome());
-        cliente.setEmail(obj.getEmail());
-        cliente.setFone(obj.getFone());
+        if (!objetos.containsKey(obj.id()))
+            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.id() + " não encontrado.");
+        objetos.put(obj.id(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Cliente obj) {
-        if (!objetos.removeIf(cliente -> cliente.getId() == obj.getId())) {
-            throw new ClienteNaoEncontradoException(
-                    "Cliente com ID " + obj.getId() + " não encontrado."
-            );
-        }
-
+        if (objetos.remove(obj.id()) == null)
+            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.id() + " não encontrado.");
         salvar();
     }
 }

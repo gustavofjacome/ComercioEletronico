@@ -7,11 +7,13 @@ import exception.ProdutoNaoEncontradoException;
 import modelo.Produto;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 public class ProdutoDAO implements DAO<Produto> {
 
-    private List<Produto> objetos = new ArrayList<>();
+    private Map<Integer, Produto> objetos = new HashMap<>();
+    private int nextId = 1;
     private ObjectMapper mapper = new ObjectMapper();
     private final String ARQUIVO = "produtos.json";
 
@@ -22,7 +24,7 @@ public class ProdutoDAO implements DAO<Produto> {
 
     @Override
     public void salvar() {
-        try { mapper.writeValue(new File(ARQUIVO), objetos); }
+        try { mapper.writeValue(new File(ARQUIVO), new ArrayList<>(objetos.values())); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
     }
 
@@ -31,59 +33,45 @@ public class ProdutoDAO implements DAO<Produto> {
         try {
             File arquivo = new File(ARQUIVO);
             if (arquivo.exists()) {
-                objetos = mapper.readValue(arquivo, new TypeReference<List<Produto>>(){});
+                List<Produto> lista = mapper.readValue(arquivo, new TypeReference<List<Produto>>() {});
+                objetos.clear();
+                for (Produto p : lista) {
+                    objetos.put(p.id(), p);
+                }
+                nextId = lista.stream().mapToInt(Produto::id).max().orElse(0) + 1;
             }
-        } catch (Exception e) { objetos = new ArrayList<>(); }
+        } catch (Exception e) { objetos = new HashMap<>(); }
     }
 
     @Override
     public void inserir(Produto obj) {
-        int novoId = objetos.stream()
-                .mapToInt(Produto::getId)
-                .max()
-                .orElse(0) + 1;
-        obj.setId(novoId);
-        objetos.add(obj);
+        int id = nextId++;
+        objetos.put(id, new Produto(id, obj.descricao(), obj.preco(), obj.estoque(), obj.idCategoria()));
         salvar();
     }
 
     @Override
-    public List<Produto> listar() { return objetos; }
+    public List<Produto> listar() { return new ArrayList<>(objetos.values()); }
 
     @Override
     public Produto listarId(int id) {
-        return objetos.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(
-                        "Produto com ID " + id + " não encontrado."
-                ));
+        Produto p = objetos.get(id);
+        if (p == null) throw new ProdutoNaoEncontradoException("Produto com ID " + id + " não encontrado.");
+        return p;
     }
 
     @Override
     public void atualizar(Produto obj) {
-        Produto produto = objetos.stream()
-                .filter(p -> p.getId() == obj.getId())
-                .findFirst()
-                .orElseThrow(() -> new ProdutoNaoEncontradoException(
-                        "Produto com ID " + obj.getId() + " não encontrado."
-                ));
-
-        produto.setDescricao(obj.getDescricao());
-        produto.setPreco(obj.getPreco());
-        produto.setEstoque(obj.getEstoque());
-        produto.setIdCategoria(obj.getIdCategoria());
+        if (!objetos.containsKey(obj.id()))
+            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.id() + " não encontrado.");
+        objetos.put(obj.id(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Produto obj) {
-        if (!objetos.removeIf(produto -> produto.getId() == obj.getId())) {
-            throw new ProdutoNaoEncontradoException(
-                    "Produto com ID " + obj.getId() + " não encontrado."
-            );
-        }
-
+        if (objetos.remove(obj.id()) == null)
+            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.id() + " não encontrado.");
         salvar();
     }
 }
