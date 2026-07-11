@@ -108,7 +108,7 @@ public class UI {
 
         Produto produtoExistente = null;
         for (Produto p : View.produtoListar()) {
-            if (p.getId() == id) {
+            if (p.id() == id) {
                 produtoExistente = p;
                 break;
             }
@@ -143,7 +143,7 @@ public class UI {
 
         Produto produtoExistente = null;
         for (Produto p : View.produtoListar()) {
-            if (p.getId() == id) {
+            if (p.id() == id) {
                 produtoExistente = p;
                 break;
             }
@@ -203,7 +203,7 @@ public class UI {
 
         Cliente clienteExistente = null;
         for (Cliente c : View.clienteListar()) {
-            if (c.getId() == id) {
+            if (c.id() == id) {
                 clienteExistente = c;
                 break;
             }
@@ -234,7 +234,7 @@ public class UI {
 
         Cliente clienteExistente = null;
         for (Cliente c : View.clienteListar()) {
-            if (c.getId() == id) {
+            if (c.id() == id) {
                 clienteExistente = c;
                 break;
             }
@@ -278,7 +278,7 @@ public class UI {
 
         Categoria categoriaExistente = null;
         for (Categoria c : View.categoriaListar()) {
-            if (c.getId() == id) {
+            if (c.id() == id) {
                 categoriaExistente = c;
                 break;
             }
@@ -303,7 +303,7 @@ public class UI {
 
         Categoria categoriaExistente = null;
         for (Categoria c : View.categoriaListar()) {
-            if (c.getId() == id) {
+            if (c.id() == id) {
                 categoriaExistente = c;
                 break;
             }
