@@ -17,7 +17,7 @@ import java.util.List;
  * @see dao.ProdutoDAO
  * @see dao.CategoriaDAO
  */
-public class ProdutoDAO {
+public class ProdutoDAO implements DAO<Produto>{
     private List<Produto> objetos = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
     private final String ARQUIVO = "produtos.json";
@@ -39,6 +39,7 @@ public class ProdutoDAO {
      * a exceção é capturada e a mensagem de erro é exibida via saída padrão do console.
      * @see ObjectMapper#writeValue(File, Object)
      */
+    @Override
     public void salvar() {
         try { mapper.writeValue(new File(ARQUIVO), objetos); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
@@ -51,6 +52,7 @@ public class ProdutoDAO {
      * vazio/corrompido, a lista interna é inicializada vazia para evitar falhas de execução.
      * @see ObjectMapper#readValue(File, TypeReference)
      */
+    @Override
     public void abrir() {
         try {
             File arquivo = new File(ARQUIVO);
@@ -67,6 +69,7 @@ public class ProdutoDAO {
      * @param obj A instância contendo os dados do novo {@link Produto} a ser cadastrado.
      * @see #salvar()
      */
+    @Override
     public void inserir(Produto obj) {
         int novoId = 1;
         for (Produto p : objetos) { if (p.getId() >= novoId) novoId = p.getId() + 1; }
@@ -79,6 +82,7 @@ public class ProdutoDAO {
      * Recupera todos os registros de produtos que estão atualmente cacheados na memória.
      * @return Uma estrutura do tipo {@link List} contendo todas as instâncias de {@link Produto}.
      */
+    @Override
     public List<Produto> listar() { return objetos; }
 
     /**
@@ -87,6 +91,7 @@ public class ProdutoDAO {
      * @param id O valor numérico (inteiro) que representa a chave exclusiva do produto.
      * @return O objeto {@link Produto} se a correspondência for exata; caso contrário, retorna {@code null}.
      */
+    @Override
     public Produto listarId(int id) {
         for (Produto x : objetos) { if (x.getId() == id) return x; }
         return null;
@@ -100,6 +105,7 @@ public class ProdutoDAO {
      * @param obj O objeto {@link Produto} preenchido com o ID do registro alvo e seus novos valores de atributos.
      * @see #salvar()
      */
+    @Override
     public void atualizar(Produto obj) {
         for (Produto y : objetos) {
             if (y.getId() == obj.getId()) {
@@ -120,6 +126,7 @@ public class ProdutoDAO {
      * @see #salvar()
      * @see List#remove(Object)
      */
+    @Override
     public void excluir(Produto obj) {
         for (Produto z : objetos) {
             if (z.getId() == obj.getId()) {

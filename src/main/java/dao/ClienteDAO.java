@@ -15,7 +15,7 @@ import java.util.List;
  * @see modelo.Cliente
  * @see com.fasterxml.jackson.databind.ObjectMapper
  */
-public class ClienteDAO {
+public class ClienteDAO implements DAO<Cliente>{
 
     /**
      * Lista mantida em memória que atua como cache dos dados cadastrais dos clientes
@@ -56,6 +56,7 @@ public class ClienteDAO {
      * de leitura/escrita do sistema operacional, o erro será interceptado e impresso no console.
      * @see ObjectMapper#writeValue(File, Object)
      */
+    @Override
     public void salvar() {
         try { mapper.writeValue(new File(ARQUIVO), objetos); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
@@ -68,6 +69,7 @@ public class ClienteDAO {
      * a lista é redefinida para uma nova instância vazia, prevenindo exceções nulas.
      * @see ObjectMapper#readValue(File, TypeReference)
      */
+    @Override
     public void abrir() {
         try {
             File arquivo = new File(ARQUIVO);
@@ -84,6 +86,7 @@ public class ClienteDAO {
      * @param obj A instância de {@link Cliente} contendo os novos dados a serem inseridos.
      * @see #salvar()
      */
+    @Override
     public void inserir(Cliente obj) {
         int novoId = 1;
         for (Cliente c : objetos) { if (c.getId() >= novoId) novoId = c.getId() + 1; }
@@ -97,6 +100,7 @@ public class ClienteDAO {
      * e carregados em memória.
      * @return Uma {@link List} contendo todas as instâncias de {@link Cliente} armazenadas.
      */
+    @Override
     public List<Cliente> listar() { return objetos; }
 
     /**
@@ -106,7 +110,8 @@ public class ClienteDAO {
      * @return A instância de {@link Cliente} correspondente ao ID informado,
      * ou {@code null} caso nenhum registro corresponda a este parâmetro na lista.
      */
-    public Cliente listarID(int id) {
+    @Override
+    public Cliente listarId(int id) {
         for (Cliente x : objetos) { if (x.getId() == id) return x; }
         return null;
     }
@@ -119,6 +124,7 @@ public class ClienteDAO {
      * @param obj A instância de {@link Cliente} portando o ID de busca e as informações atualizadas.
      * @see #salvar()
      */
+    @Override
     public void atualizar(Cliente obj) {
         for (Cliente x : objetos) {
             if (x.getId() == obj.getId()) {
@@ -139,6 +145,7 @@ public class ClienteDAO {
      * @see #salvar()
      * @see List#remove(Object)
      */
+    @Override
     public void excluir(Cliente obj) {
         for (Cliente x : objetos) {
             if (x.getId() == obj.getId()) {

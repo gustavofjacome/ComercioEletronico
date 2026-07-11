@@ -15,7 +15,7 @@ import java.util.List;
  * @see modelo.Categoria
  * @see com.fasterxml.jackson.databind.ObjectMapper
  */
-public class CategoriaDAO {
+public class CategoriaDAO implements DAO<Categoria> {
 
     /**
      * Lista mantida em memória que atua como cache dos dados armazenados no arquivo.
@@ -54,6 +54,7 @@ public class CategoriaDAO {
      * o erro será interceptado e impresso no console padrão.
      * @see ObjectMapper#writeValue(File, Object)
      */
+    @Override
     public void salvar() {
         try { mapper.writeValue(new File(ARQUIVO), objetos); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
@@ -66,6 +67,7 @@ public class CategoriaDAO {
      * para uma nova instância vazia.
      * @see ObjectMapper#readValue(File, TypeReference)
      */
+    @Override
     public void abrir() {
         try {
             File arquivo = new File(ARQUIVO);
@@ -82,6 +84,7 @@ public class CategoriaDAO {
      * @param obj A instância de {@link Categoria} que será inserida.
      * @see #salvar()
      */
+    @Override
     public void inserir(Categoria obj) {
         int novoId = 1;
         for (Categoria c : objetos) { if (c.getId() >= novoId) novoId = c.getId() + 1; }
@@ -102,6 +105,7 @@ public class CategoriaDAO {
      * @return A instância de {@link Categoria} correspondente ao ID buscado,
      * ou {@code null} caso nenhum registro corresponda ao parâmetro.
      */
+    @Override
     public Categoria listarId(int id) {
         for (Categoria x : objetos) { if (x.getId() == id) return x; }
         return null;
@@ -115,6 +119,7 @@ public class CategoriaDAO {
      * * @param obj A instância de {@link Categoria} portando o ID de busca e a nova descrição.
      * @see #salvar()
      */
+    @Override
     public void atualizar(Categoria obj) {
         for (Categoria y : objetos) {
             if (y.getId() == obj.getId()) {
@@ -133,6 +138,7 @@ public class CategoriaDAO {
      * @see #salvar()
      * @see List#remove(Object)
      */
+    @Override
     public void excluir(Categoria obj) {
         for (Categoria z : objetos) {
             if (z.getId() == obj.getId()) {

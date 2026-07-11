@@ -19,7 +19,7 @@ import java.util.List;
  * @see com.fasterxml.jackson.databind.ObjectMapper
  * @see com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
  */
-public class VendaDAO {
+public class VendaDAO implements DAO<Venda>{
 
     /**
      * Lista mantida em memória que atua como cache do histórico de vendas
@@ -64,6 +64,7 @@ public class VendaDAO {
      * insuficientes no sistema operativo, o erro será interceptado e impresso na consola.
      * @see ObjectMapper#writeValue(File, Object)
      */
+    @Override
     public void salvar() {
         try { mapper.writeValue(new File(ARQUIVO), objetos); }
         catch (Exception e) { System.out.println("Erro ao salvar: " + e.getMessage()); }
@@ -77,6 +78,7 @@ public class VendaDAO {
      * @see ObjectMapper#readValue(File, TypeReference)
      * @see java.io.File#exists()
      */
+    @Override
     public void abrir() {
         try {
             File arquivo = new File(ARQUIVO);
@@ -93,6 +95,7 @@ public class VendaDAO {
      * @param obj A instância de {@link Venda} contendo os dados da transação a ser registada.
      * @see #salvar()
      */
+    @Override
     public void inserir(Venda obj) {
         int novoId = 1;
         for (Venda v : objetos) { if (v.getId() >= novoId) novoId = v.getId() + 1; }
@@ -107,6 +110,7 @@ public class VendaDAO {
      * @return Uma {@link List} contendo todas as instâncias de {@link Venda} registadas no sistema.
      * @see java.util.List
      */
+    @Override
     public List<Venda> listar() { return objetos; }
 
     /**
@@ -116,6 +120,7 @@ public class VendaDAO {
      * @return A instância de {@link Venda} correspondente ao ID informado,
      * ou {@code null} caso nenhum registo coincida na lista ativa.
      */
+    @Override
     public Venda listarId(int id) {
         for (Venda x : objetos) { if (x.getId() == id) return x; }
         return null;
@@ -129,6 +134,7 @@ public class VendaDAO {
      * @param obj A instância de {@link Venda} portando o ID de busca e os valores a serem atualizados.
      * @see #salvar()
      */
+    @Override
     public void atualizar(Venda obj) {
         for (Venda y : objetos) {
             if (y.getId() == obj.getId()) {
@@ -150,6 +156,7 @@ public class VendaDAO {
      * @see #salvar()
      * @see List#remove(Object)
      */
+    @Override
     public void excluir(Venda obj) {
         for (Venda z : objetos) {
             if (z.getId() == obj.getId()) {
