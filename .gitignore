@@ -1,1 +1,15 @@
+### --- MAVEN COMPILATION (OBRIGATÓRIO) ---
 target/
+*.war
+*.ear
+*.jar
+
+### --- IDE CONFIGURATIONS (INTELLIJ) ---
+# Ignora absolutamente tudo dentro da pasta .idea
+.idea/
+*.iml
+
+### --- SYSTEM FILES ---
+*.log
+.DS_Store
+Thumbs.db

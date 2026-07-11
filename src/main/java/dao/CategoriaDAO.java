@@ -37,9 +37,9 @@ public class CategoriaDAO implements DAO<Categoria> {
                 List<Categoria> lista = mapper.readValue(arquivo, new TypeReference<List<Categoria>>() {});
                 objetos.clear();
                 for (Categoria c : lista) {
-                    objetos.put(c.id(), c);
+                    objetos.put(c.getId(), c);
                 }
-                nextId = lista.stream().mapToInt(Categoria::id).max().orElse(0) + 1;
+                nextId = lista.stream().mapToInt(Categoria::getId).max().orElse(0) + 1;
             }
         } catch (Exception e) { objetos = new HashMap<>(); }
     }
@@ -47,7 +47,7 @@ public class CategoriaDAO implements DAO<Categoria> {
     @Override
     public void inserir(Categoria obj) {
         int id = nextId++;
-        objetos.put(id, new Categoria(id, obj.descricao()));
+        objetos.put(id, new Categoria(id, obj.getDescricao()));
         salvar();
     }
 
@@ -63,16 +63,16 @@ public class CategoriaDAO implements DAO<Categoria> {
 
     @Override
     public void atualizar(Categoria obj) {
-        if (!objetos.containsKey(obj.id()))
-            throw new CategoriaNaoEncontradaException("Categoria com ID " + obj.id() + " não encontrada.");
-        objetos.put(obj.id(), obj);
+        if (!objetos.containsKey(obj.getId()))
+            throw new CategoriaNaoEncontradaException("Categoria com ID " + obj.getId() + " não encontrada.");
+        objetos.put(obj.getId(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Categoria obj) {
-        if (objetos.remove(obj.id()) == null)
-            throw new CategoriaNaoEncontradaException("Categoria com ID " + obj.id() + " não encontrada.");
+        if (objetos.remove(obj.getId()) == null)
+            throw new CategoriaNaoEncontradaException("Categoria com ID " + obj.getId() + " não encontrada.");
         salvar();
     }
 }

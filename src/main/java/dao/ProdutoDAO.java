@@ -36,9 +36,9 @@ public class ProdutoDAO implements DAO<Produto> {
                 List<Produto> lista = mapper.readValue(arquivo, new TypeReference<List<Produto>>() {});
                 objetos.clear();
                 for (Produto p : lista) {
-                    objetos.put(p.id(), p);
+                    objetos.put(p.getId(), p);
                 }
-                nextId = lista.stream().mapToInt(Produto::id).max().orElse(0) + 1;
+                nextId = lista.stream().mapToInt(Produto::getId).max().orElse(0) + 1;
             }
         } catch (Exception e) { objetos = new HashMap<>(); }
     }
@@ -46,7 +46,7 @@ public class ProdutoDAO implements DAO<Produto> {
     @Override
     public void inserir(Produto obj) {
         int id = nextId++;
-        objetos.put(id, new Produto(id, obj.descricao(), obj.preco(), obj.estoque(), obj.idCategoria()));
+        objetos.put(id, new Produto(obj.getId(), obj.getDescricao(), obj.getPreco(),obj.getEstoque()));
         salvar();
     }
 
@@ -62,16 +62,16 @@ public class ProdutoDAO implements DAO<Produto> {
 
     @Override
     public void atualizar(Produto obj) {
-        if (!objetos.containsKey(obj.id()))
-            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.id() + " não encontrado.");
-        objetos.put(obj.id(), obj);
+        if (!objetos.containsKey(obj.getId()))
+            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.getId() + " não encontrado.");
+        objetos.put(obj.getId(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Produto obj) {
-        if (objetos.remove(obj.id()) == null)
-            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.id() + " não encontrado.");
+        if (objetos.remove(obj.getId()) == null)
+            throw new ProdutoNaoEncontradoException("Produto com ID " + obj.getId() + " não encontrado.");
         salvar();
     }
 }
