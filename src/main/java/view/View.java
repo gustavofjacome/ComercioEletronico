@@ -24,14 +24,14 @@ public class View {
     }
 
     public static void atualizarCliente(int id, String nome, String email, String fone){
-        Cliente novoCliente = new Cliente(id , nome, email, fone);
+        Cliente novoCliente = new Cliente(id, nome, email, fone);
         clienteDAO.atualizar(novoCliente);
     }
 
     public static void excluirCliente(int id){
         Cliente seraRemovido = null;
         for (Cliente x : clienteDAO.listar()){
-            if (x.getId() == id){
+            if (x.id() == id){
                 seraRemovido = x;
                 break;
             }
@@ -56,7 +56,7 @@ public class View {
     public static void categoriaExcluir(int id){
         Categoria seraRemovido = null;
         for (Categoria x : categoriaListar()){
-            if (x.getId() == id){
+            if (x.id() == id){
                 seraRemovido = x;
                 break;
             }
@@ -69,21 +69,19 @@ public class View {
     }
 
     public static void produtoInserir(String descricao, double preco, int estoque, int idCategoria){
-        Produto novoProduto = new Produto(0, descricao, preco, estoque);
-        novoProduto.setIdCategoria(idCategoria);
+        Produto novoProduto = new Produto(0, descricao, preco, estoque, idCategoria);
         produtoDAO.inserir(novoProduto);
     }
 
     public static void produtoAtualizar(int id, String descricao, double preco, int estoque, int idCategoria){
-        Produto novoProduto = new Produto(id, descricao, preco, estoque);
-        novoProduto.setIdCategoria(idCategoria);
+        Produto novoProduto = new Produto(id, descricao, preco, estoque, idCategoria);
         produtoDAO.atualizar(novoProduto);
     }
 
     public static void produtoExcluir(int id){
         Produto seraRemovido = null;
         for (Produto x : produtoDAO.listar()){
-            if (x.getId() == id){
+            if (x.id() == id){
                 seraRemovido = x;
                 break;
             }
@@ -92,12 +90,10 @@ public class View {
     }
 
     public static void produtoReajustar(double percentual){
-        //aplicável a todos os produtos
         for (Produto x : produtoDAO.listar()){
-            x.setPreco(x.getPreco() * (1 + (percentual/100)));
-            produtoDAO.atualizar(x);
+            Produto atualizado = new Produto(x.id(), x.descricao(), x.preco() * (1 + (percentual / 100)), x.estoque(), x.idCategoria());
+            produtoDAO.atualizar(atualizado);
         }
-
     }
 
 }

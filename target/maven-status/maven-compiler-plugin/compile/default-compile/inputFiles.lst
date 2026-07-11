@@ -1,5 +1,6 @@
 /home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/CategoriaDAO.java
 /home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/ClienteDAO.java
+/home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/DAO.java
 /home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/ProdutoDAO.java
 /home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/VendaDAO.java
 /home/gustavo/projetoLucenaPOO/ComercioEletronico/src/main/java/dao/VendaItemDAO.java
