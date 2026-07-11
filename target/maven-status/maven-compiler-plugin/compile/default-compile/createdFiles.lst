@@ -1,0 +1,5 @@
+exception/CategoriaNaoEncontradaException.class
+exception/VendaNaoEncontradaException.class
+exception/ProdutoNaoEncontradoException.class
+exception/ClienteNaoEncontradoException.class
+exception/VendaItemNaoEncontradoException.class

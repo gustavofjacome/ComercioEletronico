@@ -3,6 +3,7 @@ package dao;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.VendaItemNaoEncontradoException;
 import modelo.VendaItem;
 import java.io.File;
 import java.util.ArrayList;
@@ -22,36 +23,10 @@ import java.util.List;
  */
 public class VendaItemDAO implements DAO<VendaItem>{
 
-    /**
-     * Lista mantida em memória que atua como cache dos itens de venda
-     * armazenados no arquivo físico.
-     * @see java.util.List
-     * @see java.util.ArrayList
-     */
     private List<VendaItem> objetos = new ArrayList<>();
-
-    /**
-     * Instância do conversor responsável pela serialização e desserialização
-     * dos objetos da classe {@link VendaItem} para o formato JSON e vice-versa.
-     * @see com.fasterxml.jackson.databind.ObjectMapper
-     */
     private ObjectMapper mapper = new ObjectMapper();
-
-    /**
-     * Nome do arquivo físico no sistema operacional onde os dados referentes aos
-     * itens do carrinho de compras serão persistidos de forma definitiva.
-     * @see java.io.File
-     */
     private final String ARQUIVO = "vendas_itens.json";
 
-    /**
-     * Construtor padrão da classe {@link VendaItemDAO}.
-     * Inicializa a formatação indentada (pretty-printing) no conversor JSON
-     * para facilitar a auditoria estrutural do arquivo gerado e invoca
-     * a carga inicial dos dados armazenados no disco para a memória.
-     * @see #abrir()
-     * @see SerializationFeature#INDENT_OUTPUT
-     */
     public VendaItemDAO() {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         abrir();
@@ -96,8 +71,10 @@ public class VendaItemDAO implements DAO<VendaItem>{
      */
     @Override
     public void inserir(VendaItem obj) {
-        int novoId = 1;
-        for (VendaItem v : objetos) { if (v.getId() >= novoId) novoId = v.getId() + 1; }
+        int novoId = objetos.stream()
+                .mapToInt(VendaItem::getId)
+                .max()
+                .orElse(0) + 1;
         obj.setId(novoId);
         objetos.add(obj);
         salvar();
@@ -121,8 +98,12 @@ public class VendaItemDAO implements DAO<VendaItem>{
      */
     @Override
     public VendaItem listarId(int id) {
-        for (VendaItem x : objetos) { if (x.getId() == id) return x; }
-        return null;
+        return objetos.stream()
+                .filter(v -> v.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new VendaItemNaoEncontradoException(
+                        "VendaItem com ID " + id + " não encontrado."
+                ));
     }
 
     /**
@@ -135,16 +116,18 @@ public class VendaItemDAO implements DAO<VendaItem>{
      */
     @Override
     public void atualizar(VendaItem obj) {
-        for (VendaItem y : objetos) {
-            if (y.getId() == obj.getId()) {
-                y.setQtd(obj.getQtd());
-                y.setPreco(obj.getPreco());
-                y.setIdVenda(obj.getIdVenda());
-                y.setIdProduto(obj.getIdProduto());
-                salvar();
-                break;
-            }
-        }
+        VendaItem item = objetos.stream()
+                .filter(v -> v.getId() == obj.getId())
+                .findFirst()
+                .orElseThrow(() -> new VendaItemNaoEncontradoException(
+                        "VendaItem com ID " + obj.getId() + " não encontrado."
+                ));
+
+        item.setQtd(obj.getQtd());
+        item.setPreco(obj.getPreco());
+        item.setIdVenda(obj.getIdVenda());
+        item.setIdProduto(obj.getIdProduto());
+        salvar();
     }
 
     /**
@@ -157,12 +140,12 @@ public class VendaItemDAO implements DAO<VendaItem>{
      */
     @Override
     public void excluir(VendaItem obj) {
-        for (VendaItem z : objetos) {
-            if (z.getId() == obj.getId()) {
-                objetos.remove(z);
-                salvar();
-                break;
-            }
+        if (!objetos.removeIf(item -> item.getId() == obj.getId())) {
+            throw new VendaItemNaoEncontradoException(
+                    "VendaItem com ID " + obj.getId() + " não encontrado."
+            );
         }
+
+        salvar();
     }
 }

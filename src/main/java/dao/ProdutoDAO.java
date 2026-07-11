@@ -3,6 +3,7 @@ package dao;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import exception.ProdutoNaoEncontradoException;
 import modelo.Produto;
 import java.io.File;
 import java.util.ArrayList;
@@ -22,12 +23,6 @@ public class ProdutoDAO implements DAO<Produto>{
     private ObjectMapper mapper = new ObjectMapper();
     private final String ARQUIVO = "produtos.json";
 
-    /**
-     * Construtor padrão que inicializa as configurações básicas de acesso a dados do Produto.
-     * Ativa o recurso de identação na saída do JSON para facilitar a auditoria do arquivo
-     * gerado e invoca a rotina de carregamento inicial dos dados do disco para a memória.
-     * @see #abrir()
-     */
     public ProdutoDAO() {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         abrir();
@@ -71,8 +66,10 @@ public class ProdutoDAO implements DAO<Produto>{
      */
     @Override
     public void inserir(Produto obj) {
-        int novoId = 1;
-        for (Produto p : objetos) { if (p.getId() >= novoId) novoId = p.getId() + 1; }
+        int novoId = objetos.stream()
+                .mapToInt(Produto::getId)
+                .max()
+                .orElse(0) + 1;
         obj.setId(novoId);
         objetos.add(obj);
         salvar();
@@ -93,8 +90,12 @@ public class ProdutoDAO implements DAO<Produto>{
      */
     @Override
     public Produto listarId(int id) {
-        for (Produto x : objetos) { if (x.getId() == id) return x; }
-        return null;
+        return objetos.stream()
+                .filter(p -> p.getId() == id)
+                .findFirst()
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(
+                        "Produto com ID " + id + " não encontrado."
+                ));
     }
 
     /**
@@ -107,16 +108,18 @@ public class ProdutoDAO implements DAO<Produto>{
      */
     @Override
     public void atualizar(Produto obj) {
-        for (Produto y : objetos) {
-            if (y.getId() == obj.getId()) {
-                y.setDescricao(obj.getDescricao());
-                y.setPreco(obj.getPreco());
-                y.setEstoque(obj.getEstoque());
-                y.setIdCategoria(obj.getIdCategoria());
-                salvar();
-                break;
-            }
-        }
+        Produto produto = objetos.stream()
+                .filter(p -> p.getId() == obj.getId())
+                .findFirst()
+                .orElseThrow(() -> new ProdutoNaoEncontradoException(
+                        "Produto com ID " + obj.getId() + " não encontrado."
+                ));
+
+        produto.setDescricao(obj.getDescricao());
+        produto.setPreco(obj.getPreco());
+        produto.setEstoque(obj.getEstoque());
+        produto.setIdCategoria(obj.getIdCategoria());
+        salvar();
     }
 
     /**
@@ -128,12 +131,12 @@ public class ProdutoDAO implements DAO<Produto>{
      */
     @Override
     public void excluir(Produto obj) {
-        for (Produto z : objetos) {
-            if (z.getId() == obj.getId()) {
-                objetos.remove(z);
-                salvar();
-                break;
-            }
+        if (!objetos.removeIf(produto -> produto.getId() == obj.getId())) {
+            throw new ProdutoNaoEncontradoException(
+                    "Produto com ID " + obj.getId() + " não encontrado."
+            );
         }
+
+        salvar();
     }
 }
