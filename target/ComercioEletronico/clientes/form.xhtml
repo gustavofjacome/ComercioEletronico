@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <title>Cliente - Formulário</title>
+</h:head>
+<h:body>
+
+    <h1>Cadastro de Cliente</h1>
+
+    <h:form>
+        <h:outputLabel for="nome" value="Nome: " />
+        <h:inputText id="nome" value="#{clienteBean.cliente.nome}" required="true" />
+        <h:message for="nome" />
+        <br/>
+
+        <h:outputLabel for="email" value="E-mail" />
+        <h:inputText id="email" value="#{clienteBean.cliente.email}" required="true" />
+        <h:message for="email" />
+        <br/>
+
+        <h:outputLabel for="fone" value="Telefone" />
+        <h:inputText id="fone" value="#{clienteBean.cliente.fone}" />
+        <br/>
+
+        <h:commandButton value="Salvar" action="#{clienteBean.salvar}" />
+    </h:form>
+    <br/>
+    <h:link outcome="/clientes/listar" value="Voltar para a listagem" />
+
+
+
+</h:body>
+</html>

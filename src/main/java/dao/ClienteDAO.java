@@ -36,9 +36,9 @@ public class ClienteDAO implements DAO<Cliente> {
                 List<Cliente> lista = mapper.readValue(arquivo, new TypeReference<List<Cliente>>() {});
                 objetos.clear();
                 for (Cliente c : lista) {
-                    objetos.put(c.id(), c);
+                    objetos.put(c.getId(), c);
                 }
-                nextId = lista.stream().mapToInt(Cliente::id).max().orElse(0) + 1;
+                nextId = lista.stream().mapToInt(Cliente::getId).max().orElse(0) + 1;
             }
         } catch (Exception e) { objetos = new HashMap<>(); }
     }
@@ -46,7 +46,7 @@ public class ClienteDAO implements DAO<Cliente> {
     @Override
     public void inserir(Cliente obj) {
         int id = nextId++;
-        objetos.put(id, new Cliente(id, obj.nome(), obj.email(), obj.fone()));
+        objetos.put(id, new Cliente(id, obj.getNome(), obj.getEmail(), obj.getFone()));
         salvar();
     }
 
@@ -62,16 +62,16 @@ public class ClienteDAO implements DAO<Cliente> {
 
     @Override
     public void atualizar(Cliente obj) {
-        if (!objetos.containsKey(obj.id()))
-            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.id() + " não encontrado.");
-        objetos.put(obj.id(), obj);
+        if (!objetos.containsKey(obj.getId()))
+            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.getId() + " não encontrado.");
+        objetos.put(obj.getId(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Cliente obj) {
-        if (objetos.remove(obj.id()) == null)
-            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.id() + " não encontrado.");
+        if (objetos.remove(obj.getId()) == null)
+            throw new ClienteNaoEncontradoException("Cliente com ID " + obj.getId() + " não encontrado.");
         salvar();
     }
 }

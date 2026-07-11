@@ -36,17 +36,16 @@ public class VendaItemDAO implements DAO<VendaItem> {
                 List<VendaItem> lista = mapper.readValue(arquivo, new TypeReference<List<VendaItem>>() {});
                 objetos.clear();
                 for (VendaItem v : lista) {
-                    objetos.put(v.id(), v);
+                    objetos.put(v.getId(), v);
                 }
-                nextId = lista.stream().mapToInt(VendaItem::id).max().orElse(0) + 1;
+                nextId = lista.stream().mapToInt(VendaItem::getId).max().orElse(0) + 1;
             }
         } catch (Exception e) { objetos = new HashMap<>(); }
     }
 
     @Override
     public void inserir(VendaItem obj) {
-        int id = nextId++;
-        objetos.put(id, new VendaItem(id, obj.qtd(), obj.preco(), obj.idVenda(), obj.idProduto()));
+        objetos.put(obj.getId(), new VendaItem(obj.getId(), obj.getQtd(), obj.getPreco()));
         salvar();
     }
 
@@ -62,16 +61,16 @@ public class VendaItemDAO implements DAO<VendaItem> {
 
     @Override
     public void atualizar(VendaItem obj) {
-        if (!objetos.containsKey(obj.id()))
-            throw new VendaItemNaoEncontradoException("VendaItem com ID " + obj.id() + " não encontrado.");
-        objetos.put(obj.id(), obj);
+        if (!objetos.containsKey(obj.getId()))
+            throw new VendaItemNaoEncontradoException("VendaItem com ID " + obj.getId() + " não encontrado.");
+        objetos.put(obj.getId(), obj);
         salvar();
     }
 
     @Override
     public void excluir(VendaItem obj) {
-        if (objetos.remove(obj.id()) == null)
-            throw new VendaItemNaoEncontradoException("VendaItem com ID " + obj.id() + " não encontrado.");
+        if (objetos.remove(obj.getId()) == null)
+            throw new VendaItemNaoEncontradoException("VendaItem com ID " + obj.getId() + " não encontrado.");
         salvar();
     }
 }

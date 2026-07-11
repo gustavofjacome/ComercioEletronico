@@ -15,6 +15,16 @@ public class ClienteBean implements Serializable {
     private ClienteDAO dao = new ClienteDAO();
     private Cliente cliente = new Cliente();
 
+    // MÉTODOS OBRIGATÓRIOS PARA O JSF ENCONTRAR E MODIFICAR A PROPRIEDADE
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+
     public List<Cliente> getLista(){
         return dao.listar();
     }
@@ -31,5 +41,10 @@ public class ClienteBean implements Serializable {
     public String excluir(Cliente c){
         dao.excluir(c);
         return "listar?faces-redirect=true";
+    }
+
+    public String atualizar(Cliente c){
+        dao.atualizar(c);
+        return "form?faces-redirect=true";
     }
 }

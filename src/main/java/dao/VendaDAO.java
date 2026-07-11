@@ -38,9 +38,9 @@ public class VendaDAO implements DAO<Venda> {
                 List<Venda> lista = mapper.readValue(arquivo, new TypeReference<List<Venda>>() {});
                 objetos.clear();
                 for (Venda v : lista) {
-                    objetos.put(v.id(), v);
+                    objetos.put(v.getId(), v);
                 }
-                nextId = lista.stream().mapToInt(Venda::id).max().orElse(0) + 1;
+                nextId = lista.stream().mapToInt(Venda::getId).max().orElse(0) + 1;
             }
         } catch (Exception e) { objetos = new HashMap<>(); }
     }
@@ -48,7 +48,7 @@ public class VendaDAO implements DAO<Venda> {
     @Override
     public void inserir(Venda obj) {
         int id = nextId++;
-        objetos.put(id, new Venda(id, obj.date(), obj.carrinho(), obj.total(), obj.idCliente()));
+        objetos.put(id, new Venda(id, obj.getDate(), obj.isCarrinho(), obj.getTotal(), obj.getIdCliente()));
         salvar();
     }
 
@@ -64,16 +64,16 @@ public class VendaDAO implements DAO<Venda> {
 
     @Override
     public void atualizar(Venda obj) {
-        if (!objetos.containsKey(obj.id()))
-            throw new VendaNaoEncontradaException("Venda com ID " + obj.id() + " não encontrada.");
-        objetos.put(obj.id(), obj);
+        if (!objetos.containsKey(obj.getId()))
+            throw new VendaNaoEncontradaException("Venda com ID " + obj.getId() + " não encontrada.");
+        objetos.put(obj.getId(), obj);
         salvar();
     }
 
     @Override
     public void excluir(Venda obj) {
-        if (objetos.remove(obj.id()) == null)
-            throw new VendaNaoEncontradaException("Venda com ID " + obj.id() + " não encontrada.");
+        if (objetos.remove(obj.getId()) == null)
+            throw new VendaNaoEncontradaException("Venda com ID " + obj.getId() + " não encontrada.");
         salvar();
     }
 }
