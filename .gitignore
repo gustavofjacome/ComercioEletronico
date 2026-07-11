@@ -1,1 +1,27 @@
+### --- MAVEN COMPILATION (OBRIGATÓRIO) ---
+# Ignora toda a pasta de build local (previne conflitos de arquivos .class)
 target/
+*.war
+*.ear
+*.jar
+
+### --- INTELLIJ IDEA LOCAL CONFIGURATIONS ---
+# Ignora arquivos de estados locais e caches da IDE
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionary.xml
+.idea/shelf/
+.idea/contentModel.xml
+.idea/compiler.xml
+.idea/discord.xml
+.idea/material_theme_project_new.xml
+
+# Se houver logs de crash ou arquivos temporários do sistema
+*.log
+.DS_Store
+Thumbs.db
+
+### --- CONFIGURAÇÕES QUE DEVEM SER COMPARTILHADAS (NÃO APAGAR) ---
+# Nota: Deixamos passar arquivos como .idea/misc.xml e os arquivos de módulos (.iml) 
+# para que o IntelliJ reconheça que o projeto é Maven e a versão do Java automaticamente para ambos.
