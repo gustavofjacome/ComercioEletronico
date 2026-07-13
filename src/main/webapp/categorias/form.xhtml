@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <h:outputStylesheet library="css" name="estilo.css" />
+    <title>Categoria - Formulário</title>
+</h:head>
+<h:body>
+
+    <h1>Cadastro de Categoria</h1>
+
+    <h:form>
+        <h:outputLabel for="descricao" value="Descrição: " />
+        <h:inputText id="descricao" value="#{categoriaBean.categoria.descricao}" />
+        <h:message for="descricao" />
+        <br/>
+
+        <h:commandButton value="Salvar" action="#{categoriaBean.salvar}" styleClass="btn-link"/>
+    </h:form>
+    <br/>
+    <h:link outcome="/categorias/listar" value="Voltar para a listagem" styleClass="btn-link"/>
+
+</h:body>
+</html>

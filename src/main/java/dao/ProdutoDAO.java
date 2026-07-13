@@ -46,7 +46,8 @@ public class ProdutoDAO implements DAO<Produto> {
     @Override
     public void inserir(Produto obj) {
         int id = nextId++;
-        objetos.put(id, new Produto(obj.getId(), obj.getDescricao(), obj.getPreco(),obj.getEstoque()));
+        obj.setId(id);
+        objetos.put(id, obj);
         salvar();
     }
 

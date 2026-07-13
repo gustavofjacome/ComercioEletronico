@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <h:outputStylesheet library="css" name="estilo.css" />
+    <title>Nova Venda</title>
+</h:head>
+<h:body>
+
+    <h1>Nova Venda</h1>
+
+    <h:panelGroup rendered="#{vendaBean.vendaAtual == null}">
+        <h:form>
+            <h:outputLabel for="cliente" value="Cliente: " />
+            <h:selectOneMenu id="cliente" value="#{vendaBean.idClienteSelecionado}">
+                <f:selectItem itemLabel="-- Selecione --" itemValue="0" />
+                <f:selectItems value="#{vendaBean.clientes}" var="cli"
+                               itemLabel="#{cli.nome}" itemValue="#{cli.id}" />
+            </h:selectOneMenu>
+            <br/>
+            <h:commandButton value="Iniciar Venda" action="#{vendaBean.iniciarCarrinho}" />
+        </h:form>
+    </h:panelGroup>
+
+    <h:panelGroup rendered="#{vendaBean.vendaAtual != null}">
+
+        <h2>Adicionar Produto</h2>
+        <h:form>
+            <h:outputLabel for="produto" value="Produto: " />
+            <h:selectOneMenu id="produto" value="#{vendaBean.idProdutoSelecionado}">
+                <f:selectItem itemLabel="-- Selecione --" itemValue="0" />
+                <f:selectItems value="#{vendaBean.produtos}" var="prod"
+                               itemLabel="#{prod.descricao}" itemValue="#{prod.id}" />
+            </h:selectOneMenu>
+
+            <h:outputLabel for="qtd" value=" Quantidade: " />
+            <h:inputText id="qtd" value="#{vendaBean.quantidade}" size="3" />
+
+            <h:commandButton value="Adicionar" action="#{vendaBean.adicionarItem}" />
+        </h:form>
+
+        <h2>Itens no Carrinho</h2>
+        <h:dataTable value="#{vendaBean.itensCarrinho}" var="item" styleClass="tabela-clientes">
+            <h:column>#{vendaBean.nomeProduto(item.idProduto)}</h:column>
+            <h:column>#{item.qtd}</h:column>
+            <h:column>#{item.preco}</h:column>
+            <h:column>
+                <h:form>
+                    <h:commandButton value="Remover" action="#{vendaBean.removerItem(item)}" />
+                </h:form>
+            </h:column>
+        </h:dataTable>
+
+        <h3>Total parcial: #{vendaBean.totalCarrinho}</h3>
+
+        <h2>Pagamento</h2>
+        <h:form>
+            <h:outputLabel for="pagamento" value="Forma de Pagamento: " />
+            <h:selectOneMenu id="pagamento" value="#{vendaBean.tipoPagamentoSelecionado}">
+                <f:selectItem itemLabel="Cartão" itemValue="Cartão" />
+                <f:selectItem itemLabel="Pix" itemValue="Pix" />
+                <f:selectItem itemLabel="Boleto" itemValue="Boleto" />
+            </h:selectOneMenu>
+
+            <h:outputLabel for="parcelas" value=" Parcelas: " />
+            <h:inputText id="parcelas" value="#{vendaBean.parcelas}" size="2" />
+
+            <br/>
+            <h:commandButton value="Finalizar Venda" action="#{vendaBean.finalizarVenda}" />
+        </h:form>
+
+    </h:panelGroup>
+
+    <br/>
+    <h:link outcome="/vendas/listar" value="Voltar para a listagem" styleClass="btn-link"/>
+
+</h:body>
+</html>
