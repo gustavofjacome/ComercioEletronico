@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html">
+<h:head>
+    <h:outputStylesheet library="css" name="estilo.css" />
+    <title>Vendas</title>
+</h:head>
+<h:body>
+
+    <h1>Histórico de Vendas</h1>
+
+    <h:dataTable value="#{vendaBean.lista}" var="v" styleClass="tabela-clientes">
+        <h:column>#{v.id}</h:column>
+        <h:column>#{v.date}</h:column>
+        <h:column>#{v.tipoPagamento}</h:column>
+        <h:column>#{v.total}</h:column>
+        <h:column>#{v.carrinho ? 'Em aberto' : 'Finalizada'}</h:column>
+    </h:dataTable>
+
+    <br/>
+    <h:link outcome="/vendas/carrinho" value="Nova Venda" styleClass="btn-link" />
+    <br/>
+    <h:link outcome="/index" value="Voltar ao Menu" styleClass="btn-link"/>
+
+</h:body>
+</html>

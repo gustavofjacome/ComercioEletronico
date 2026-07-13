@@ -8,22 +8,21 @@
 </h:head>
 <h:body>
 
-    <h1>Lista de Clientes</h1>
+    <h1>Lista de Categorias</h1>
 
-    <h:dataTable value="#{clienteBean.lista}" var="c" styleClass="tabela-clientes">
+    <h:dataTable value="#{categoriaBean.lista}" var="c" styleClass="tabela-clientes">
         <h:column>#{c.id}</h:column>
-        <h:column>#{c.nome}</h:column>
-        <h:column>#{c.email}</h:column>
+        <h:column>#{c.descricao}</h:column>
         <h:column>
             <h:form>
-                <h:commandButton value="Editar" action="#{clienteBean.editar(c)}" />
-                <h:commandButton value="Excluir" action="#{clienteBean.excluir(c)}" />
+                <h:commandButton value="Editar" action="#{categoriaBean.editar(c)}" />
+                <h:commandButton value="Excluir" action="#{categoriaBean.excluir(c)}" />
             </h:form>
         </h:column>
     </h:dataTable>
 
     <br/>
-    <h:link outcome="/clientes/form" value="Novo Cliente" styleClass="btn-link"/>
+    <h:link outcome="/categorias/form" value="Nova Categoria" styleClass="btn-link"/>
     <br/>
     <h:link outcome="/index" value="Voltar ao Menu" styleClass="btn-link"/>
 

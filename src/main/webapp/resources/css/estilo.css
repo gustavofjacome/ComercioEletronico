@@ -1,0 +1,293 @@
+/* ============================================
+   RESET E BASE
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cor-primaria: #4f46e5;
+    --cor-primaria-hover: #4338ca;
+    --cor-secundaria: #64748b;
+    --cor-fundo: #f8fafc;
+    --cor-card: #ffffff;
+    --cor-texto: #1e293b;
+    --cor-texto-suave: #64748b;
+    --cor-borda: #e2e8f0;
+    --cor-sucesso: #16a34a;
+    --cor-perigo: #dc2626;
+    --cor-perigo-hover: #b91c1c;
+    --sombra: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --sombra-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --raio: 10px;
+}
+
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    line-height: 1.5;
+    padding: 32px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   TIPOGRAFIA
+   ============================================ */
+h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--cor-texto);
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin: 28px 0 14px;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cor-primaria);
+    margin: 16px 0;
+}
+
+/* ============================================
+   TABELAS
+   ============================================ */
+
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background: var(--cor-card);
+    border-radius: var(--raio);
+    overflow: hidden;
+    box-shadow: var(--sombra);
+    margin-bottom: 8px;
+}
+
+thead {
+    background-color: #f1f5f9;
+}
+
+th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--cor-texto-suave);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+td {
+    padding: 14px 18px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+}
+
+tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Colunas de ações não devem esticar */
+td form {
+    display: inline-flex;
+    gap: 8px;
+}
+
+/* ============================================
+   FORMULÁRIOS
+   ============================================ */
+form {
+    background: var(--cor-card);
+    padding: 24px;
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+label {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cor-texto-suave);
+    margin-bottom: 6px;
+    min-width: 110px;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    background-color: #fff;
+    color: var(--cor-texto);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    margin-bottom: 14px;
+    min-width: 220px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+/* ============================================
+   BOTÕES
+   ============================================ */
+input[type="submit"] {
+    background-color: var(--cor-primaria);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--cor-primaria-hover);
+}
+
+input[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Botões de "Excluir" e "Remover" em vermelho, detectados pelo valor visível */
+td input[type="submit"][value="Excluir"],
+td input[type="submit"][value="Remover"] {
+    background-color: var(--cor-perigo);
+}
+
+td input[type="submit"][value="Excluir"]:hover,
+td input[type="submit"][value="Remover"]:hover {
+    background-color: var(--cor-perigo-hover);
+}
+
+td input[type="submit"][value="Editar"] {
+    background-color: var(--cor-secundaria);
+}
+
+td input[type="submit"][value="Editar"]:hover {
+    background-color: #475569;
+}
+
+/* ============================================
+   MENSAGENS DE VALIDAÇÃO (h:message)
+   ============================================ */
+.mensagem-erro,
+span[id*="j_idt"] {
+    color: var(--cor-perigo);
+    font-size: 12px;
+    display: block;
+    margin: -10px 0 12px;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================
+   ESTADOS / BADGES (usado na listagem de vendas)
+   ============================================ */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-aberto {
+    background-color: #fef9c3;
+    color: #854d0e;
+}
+
+.badge-finalizada {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* ============================================
+   BLOCOS DE CONTEÚDO (menu principal e carrinho)
+   ============================================ */
+ul {
+    list-style: none;
+    background: var(--cor-card);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
+ul li {
+    padding: 4px 8px;
+}
+
+ul li a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: background-color 0.15s ease;
+}
+
+ul li a:hover {
+    background-color: #f1f5f9;
+    text-decoration: none;
+}
+
+.btn-link {
+    display: inline-block;
+    background-color: var(--cor-primaria);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    background-color: var(--cor-primaria-hover);
+    text-decoration: none;
+}
+

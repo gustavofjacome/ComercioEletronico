@@ -45,7 +45,9 @@ public class VendaItemDAO implements DAO<VendaItem> {
 
     @Override
     public void inserir(VendaItem obj) {
-        objetos.put(obj.getId(), new VendaItem(obj.getId(), obj.getQtd(), obj.getPreco()));
+        int id = nextId++;
+        obj.setId(id);
+        objetos.put(id, obj);
         salvar();
     }
 

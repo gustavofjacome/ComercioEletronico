@@ -8,7 +8,8 @@ public class Venda {
     private boolean carrinho;
     private double total;
     private int idCliente;
-
+    private String tipoPagamento;
+    private int parcelas;
     public Venda() {
     }
 
@@ -58,6 +59,22 @@ public class Venda {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
+    }
+
+    public String getTipoPagamento() {
+        return tipoPagamento;
+    }
+
+    public void setTipoPagamento(String tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
+    }
+
+    public int getParcelas() {
+        return parcelas;
+    }
+
+    public void setParcelas(int parcelas) {
+        this.parcelas = parcelas;
     }
 
     @Override
