@@ -2,7 +2,7 @@ package modelo.pagamento;
 
 import modelo.FormaPagamento;
 
-public class Cartao extends FormaPagamento {
+public class Cartao implements FormaPagamento {
     private int parcelas;
 
     public Cartao(int parcelas) {
@@ -16,7 +16,7 @@ public class Cartao extends FormaPagamento {
 
     @Override
     public String getDescricao() {
-        return "Cartão (" + parcelas + "x)";
+        return "Cartao (" + parcelas + "x)";
     }
 
     public int getParcelas() { return parcelas; }

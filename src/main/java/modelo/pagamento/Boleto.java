@@ -2,10 +2,10 @@ package modelo.pagamento;
 
 import modelo.FormaPagamento;
 
-public class Boleto extends FormaPagamento {
+public class Boleto implements FormaPagamento {
     @Override
     public double calcularTaxa(double valorTotal) {
-        return 0; // sem taxa nem desconto
+        return 0;
     }
 
     @Override
