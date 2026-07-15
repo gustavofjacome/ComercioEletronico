@@ -1,164 +1,186 @@
 @startuml
-skinparam roundcorner 12
-skinparam shadowing true
-skinparam nodesep 60
-skinparam ranksep 80
-
-skinparam defaultFontName "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif
-skinparam classFontSize 14
-skinparam classAttributeFontSize 13
-skinparam packageFontSize 16
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI", Helvetica, Arial, sans-serif
+skinparam classFontSize 12
+skinparam classAttributeFontSize 11
 
 skinparam class {
     BackgroundColor #FFFFFF
-    BorderColor #3F51B5
+    BorderColor #2C3E50
     BorderThickness 1.5
-    ArrowColor #303F9F
     ArrowThickness 1.5
-    HeaderBackgroundColor #E8EAF6
-    FontColor #1A237E
+    HeaderBackgroundColor #ECF0F1
+    FontColor #2C3E50
 }
 
 skinparam package {
-    BackgroundColor #FCFCFC
-    BorderColor #BDBDBD
+    BackgroundColor #F8F9FA
+    BorderColor #ADB5BD
     BorderThickness 1
-    FontColor #424242
+    FontColor #212529
     FontStyle bold
 }
 
-class UI {
-    + main(args: String[])
-    + menuPrincipal()
-    + menuProdutos()
-    + menuClientes()
-    + menuCategorias()
-    + menuVendas()
-}
+package "dao" {
+    interface "DAO<T>" as DAO {
+        inserir(T)
+        listar()
+        listarId(int)
+        atualizar(T)
+        excluir(T)
+        abrir()
+        salvar()
+    }
 
-package "DAOs (Persistência)" {
+    abstract class "AbstractDAO<T>" as AbstractDAO {
+        # objetos : Map<Integer, T>
+        # nextId : int
+        # ARQUIVO : String
+        inserir(T)
+        listar()
+        listarId(int)
+        atualizar(T)
+        excluir(T)
+        abrir()
+        salvar()
+    }
+
     class CategoriaDAO {
-        - objetos : List<Categoria>
-        - mapper : ObjectMapper
-        + inserir(Categoria)
-        + listar() : List<Categoria>
+        + CategoriaDAO()
+        + listarId(int)
         + atualizar(Categoria)
         + excluir(Categoria)
-        + salvar()
-        + abrir()
     }
     class ProdutoDAO {
-        - objetos : List<Produto>
-        - mapper : ObjectMapper
-        + inserir(Produto)
-        + listar() : List<Produto>
+        + ProdutoDAO()
+        + listarId(int)
         + atualizar(Produto)
         + excluir(Produto)
-        + salvar()
-        + abrir()
-    }
-    class VendaItemDAO {
-        - objetos : List<VendaItem>
-        - mapper : ObjectMapper
-        + inserir(VendaItem)
-        + listar() : List<VendaItem>
-        + atualizar(VendaItem)
-        + excluir(VendaItem)
-        + salvar()
-        + abrir()
-    }
-    class VendaDAO {
-        - objetos : List<Venda>
-        - mapper : ObjectMapper
-        + inserir(Venda)
-        + listar() : List<Venda>
-        + atualizar(Venda)
-        + excluir(Venda)
-        + salvar()
-        + abrir()
     }
     class ClienteDAO {
-        - objetos : List<Cliente>
-        - mapper : ObjectMapper
-        + inserir(Cliente)
-        + listar() : List<Cliente>
+        + ClienteDAO()
+        + listarId(int)
         + atualizar(Cliente)
         + excluir(Cliente)
-        + salvar()
-        + abrir()
     }
+    class VendaDAO {
+        + VendaDAO()
+        + listarId(int)
+        + atualizar(Venda)
+        + excluir(Venda)
+    }
+    class VendaItemDAO {
+        + VendaItemDAO()
+        + listarId(int)
+        + atualizar(VendaItem)
+        + excluir(VendaItem)
+    }
+
+    DAO <|.. AbstractDAO #3498DB
+    AbstractDAO <|-- CategoriaDAO #2C3E50
+    AbstractDAO <|-- ProdutoDAO #2C3E50
+    AbstractDAO <|-- ClienteDAO #2C3E50
+    AbstractDAO <|-- VendaDAO #2C3E50
+    AbstractDAO <|-- VendaItemDAO #2C3E50
 }
 
-package "Modelos (Entidades)" {
+package "modelo" {
     class Categoria {
-        - id : int
-        - descricao : String
-        + get/setId()
-        + get/setDescricao()
+        - id
+        - descricao
     }
     class Produto {
-        - id : int
-        - descricao : String
-        - preco : double
-        - estoque : int
-        - idCategoria : int
-        + get/setId()
-        + get/setDescricao()
-        + get/setPreco()
-        + get/setEstoque()
-        + get/setIdCategoria()
-    }
-    class VendaItem {
-        - id : int
-        - idVenda : int
-        - idProduto : int
-        - qtd : int
-        - preco : double
-        + get/setId()
-        + get/setIdVenda()
-        + get/setIdProduto()
-        + get/setQtd()
-        + get/setPreco()
-    }
-    class Venda {
-        - id : int
-        - date : LocalDateTime
-        - total : double
-        - carrinho : boolean
-        - idCliente : int
-        + get/setId()
-        + get/setDate()
-        + get/setTotal()
-        + get/setCarrinho()
-        + get/setIdCliente()
+        - id
+        - descricao
+        - preco
+        - estoque
+        - idCategoria
     }
     class Cliente {
-        - id : int
-        - nome : String
-        - email : String
-        - fone : String
-        + get/setId()
-        + get/setNome()
-        + get/setEmail()
-        + get/setFone()
+        - id
+        - nome
+        - email
+        - fone
+    }
+    class Venda {
+        - id
+        - date
+        - total
+        - carrinho
+        - idCliente
+        - tipoPagamento
+        - parcelas
+    }
+    class VendaItem {
+        - id
+        - qtd
+        - preco
+        - idVenda
+        - idProduto
+    }
+
+    interface "FormaPagamento" as FormaPagamento {
+        calcularTaxa(double)
+        getDescricao()
+    }
+    class Boleto
+    class Cartao {
+        - parcelas
+    }
+    class Pix
+
+    FormaPagamento <|.. Boleto #3498DB
+    FormaPagamento <|.. Cartao #3498DB
+    FormaPagamento <|.. Pix #3498DB
+
+    Produto --> Categoria #E74C3C : pertence a
+    VendaItem --> Produto #E74C3C : refere-se a
+    Venda --> Cliente #E74C3C : realizada por
+    Venda --> VendaItem #E74C3C : contem
+}
+
+package "bean" {
+    class CategoriaBean {
+        + carregar()
+        + salvar()
+        + excluir()
+        + editar()
+    }
+    class ClienteBean {
+        + carregar()
+        + salvar()
+        + excluir()
+        + editar()
+    }
+    class ProdutoBean {
+        + carregar()
+        + salvar()
+        + excluir()
+        + editar()
+    }
+    class VendaBean {
+        + iniciarCarrinho()
+        + adicionarItem()
+        + finalizarVenda()
+        + getItensCarrinho()
+        + getLista()
     }
 }
 
-UI --> CategoriaDAO
-UI --> ProdutoDAO
-UI --> VendaItemDAO
-UI --> VendaDAO
-UI --> ClienteDAO
+CategoriaDAO --> Categoria #27AE60
+ProdutoDAO --> Produto #27AE60
+ClienteDAO --> Cliente #27AE60
+VendaDAO --> Venda #27AE60
+VendaItemDAO --> VendaItem #27AE60
 
-CategoriaDAO --> Categoria : gerencia
-ProdutoDAO --> Produto : gerencia
-VendaItemDAO --> VendaItem : gerencia
-VendaDAO --> Venda : gerencia
-ClienteDAO --> Cliente : gerencia
-
-Categoria "1" -right-> "*" Produto : possui
-Produto "1" -right-> "*" VendaItem : compõe
-Venda "1" -left-> "*" VendaItem : contém
-Cliente "1" -left-> "*" Venda : realiza
-
+CategoriaBean --> CategoriaDAO #E67E22
+ClienteBean --> ClienteDAO #E67E22
+ProdutoBean --> ProdutoDAO #E67E22
+ProdutoBean --> CategoriaDAO #E67E22
+VendaBean --> VendaDAO #E67E22
+VendaBean --> VendaItemDAO #E67E22
+VendaBean --> ProdutoDAO #E67E22
+VendaBean --> ClienteDAO #E67E22
+VendaBean --> FormaPagamento #E67E22
 @enduml

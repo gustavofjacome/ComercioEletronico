@@ -1,51 +1,93 @@
+# Sistema de Comercio Eletronico
 
-# Sistema de Comércio Eletrônico
-
-Este projeto consiste em um sistema de gerenciamento para e-commerce, desenvolvido em **Java** como parte da disciplina de Programação Orientada a Objetos. O sistema implementa o padrão de projeto DAO (Data Access Object) para persistência de dados e utiliza a biblioteca Jackson para serialização/desserialização de objetos em formato JSON.
+Sistema de gerenciamento para e-commerce desenvolvido em **Java 21** com **Jakarta Faces 4.0**, seguindo o padrao DAO com persistencia em arquivos JSON via Jackson.
 
 ## Funcionalidades
 
-O sistema permite o gerenciamento completo (CRUD) das seguintes entidades:
-
-* **Clientes:** Cadastro, listagem, atualização e exclusão de dados cadastrais.
-* **Produtos:** Gerenciamento de catálogo, incluindo preço, estoque e vínculo com categorias.
-* **Categorias:** Organização de produtos por categorias.
-* **Vendas:** Registro de pedidos e itens vinculados.
+- **Clientes:** CRUD completo com nome, e-mail e telefone.
+- **Categorias:** Organizacao de produtos por categoria.
+- **Produtos:** Catalogo com preco, estoque e vinculo com categoria.
+- **Vendas:** Carrinho de compras, selecao de forma de pagamento (Boleto, Cartao, Pix) com calculo de taxas/descontos, e baixa no estoque.
 
 ## Estrutura do Projeto
 
-O projeto foi organizado seguindo boas práticas de desenvolvimento Java, com a separação de responsabilidades em pacotes:
+```
+src/main/java/
+├── dao/           Interface DAO<T>, classe abstrata AbstractDAO<T> e 5 DAOs concretos
+├── modelo/        Entidades do dominio (Categoria, Cliente, Produto, Venda, VendaItem)
+├── modelo/pagamento/  Interface FormaPagamento + implementacoes (Boleto, Cartao, Pix)
+├── bean/          Managed Beans JSF (CategoriaBean, ClienteBean, ProdutoBean, VendaBean)
+└── exception/     Excecoes personalizadas (NaoEncontrada para cada entidade)
 
-* `modelo`: Classes que definem as entidades do domínio (POJOs).
-* `dao`: Classes responsáveis pela persistência dos dados e lógica de acesso.
-* `ui`: Interface de linha de comando para interação com o usuário.
+src/main/webapp/
+├── clientes/      Paginas XHTML para CRUD de clientes
+├── categorias/    Paginas XHTML para CRUD de categorias
+├── produtos/      Paginas XHTML para CRUD de produtos
+└── vendas/        Paginas XHTML para carrinho e listagem de vendas
+```
 
-## Tecnologias Utilizadas
+## Tecnologias
 
-* **Linguagem:** Java (versão 21)
-* **Gerenciador de Dependências:** Apache Maven
-* **Persistência:** Jackson (jackson-databind) para manipulação de arquivos JSON
-
-## Pré-requisitos
-
-Para executar o projeto, é necessário ter instalado:
-
-* JDK (Java Development Kit) 21 ou superior.
-* Apache Maven.
+| Tecnologia | Versao |
+|------------|--------|
+| Java | 21 |
+| Jakarta Faces (JSF) | 4.0.6 |
+| CDI (Weld) | 5.1.2 |
+| Servlet | 6.0 |
+| Jackson | 2.15.2 |
+| Maven | 3.9+ |
+| Tomcat | 10.1+ |
 
 ## Como Executar
 
-1. Clone o repositório para sua máquina local.
-2. No diretório raiz do projeto, certifique-se de que o arquivo `pom.xml` está configurado corretamente.
-3. Compile o projeto via terminal ou IDE:
-```bash
-mvn clean compile
+### Com Docker (recomendado)
 
+```bash
+# Build e executa
+docker compose up --build
+
+# Acesse em http://localhost:8080
 ```
 
+### Com Podman (Linux)
 
-4. Execute a classe `UI.java` localizada no pacote `ui`.
+```bash
+# Build e executa (alias podman-compose ou docker-compose)
+podman compose up --build
 
-## Diagrama de Arquitetura
+# Acesse em http://localhost:8080
+```
 
-![Diagrama UML do Sistema de Comércio Eletrónico](src/docs/diagramaClasses2.png)
+> Dica: No Linux, `podman compose` aceita os mesmos comandos do `docker compose`. Certifique-se de ter o `podman-compose` instalado (`sudo dnf install podman-compose` no Fedora ou `sudo apt install podman-compose` no Ubuntu/Debian).
+
+### Sem Docker (desenvolvimento local)
+
+**Pre-requisitos:** JDK 21, Maven 3.9+, Tomcat 10.1+
+
+```bash
+# Compilar e empacotar
+mvn clean package
+
+# O arquivo target/ComercioEletronico.war sera gerado
+# Copie para a pasta webapps/ do Tomcat 10.1+ e inicie o servidor
+
+# Acesse em http://localhost:8080/ComercioEletronico/
+```
+
+### Deploy no Render
+
+O Dockerfile ja esta configurado para deploy como **ROOT.war** no Tomcat, tornando a aplicacao acessivel na raiz do dominio. Basta conectar o repositorio ao Render como servico web usando o Dockerfile.
+
+## Diagrama UML
+
+![Diagrama UML](src/docs/diagramaClasses2.png)
+
+### Legenda das setas
+
+| Cor | Relacao |
+|-----|---------|
+| Azul (tracejado) | Realizacao de interface (`implements`) |
+| Preto (solido) | Heranca (`extends`) |
+| Verde | DAO gerencia entidade |
+| Laranja | Bean utiliza DAO |
+| Vermelho | Relacionamento entre entidades (FK)
